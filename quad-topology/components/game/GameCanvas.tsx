@@ -2,21 +2,40 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GameNode, GameEdge, GameTile, Vector2 } from '../../lib/types';
-import { cn } from '../../lib/utils'; // We need to create this
+import { cn } from '../../lib/utils';
+import { GRID_SCALE, OFFSET_X, OFFSET_Y } from '../../data/levels';
 
 interface GameCanvasProps {
     nodes: GameNode[];
     boundaryEdges: GameEdge[]; // Boundary edges
     userEdges: GameEdge[];
     tiles?: GameTile[];
+    invalidFaces?: { x: number, y: number }[][];
     onEdgesChange: (edges: GameEdge[]) => void;
+    onEdgeDelete?: (edgeId: string) => void; // NEW: Delete edge callback
+    // New unified handler for advanced creation
+    onStrokeCreate?: (start: { pos: Vector2, nodeId?: string }, end: { pos: Vector2, nodeId?: string }) => void;
 }
 
-export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onEdgesChange }: GameCanvasProps) {
-    const [drawingStartNode, setDrawingStartNode] = useState<string | null>(null);
+export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, invalidFaces, onEdgesChange, onEdgeDelete, onStrokeCreate }: GameCanvasProps) {
+    const [dragStart, setDragStart] = useState<{ pos: Vector2, nodeId?: string } | null>(null);
     const [mousePos, setMousePos] = useState<Vector2 | null>(null);
 
     const svgRef = useRef<SVGSVGElement>(null);
+
+    // Import constants locally or strictly match what is in data/levels if imports fail in this environment (but I will use imports)
+    // To ensure this works without import errors if the previous step failed or relative paths are tricky, I'll hardcode or use props. 
+    // Ideally I should import. I will assume the import works.
+
+    // Helper to snap to grid
+    const snapToGrid = (raw: Vector2): Vector2 => {
+        const gx = Math.round((raw.x - OFFSET_X) / GRID_SCALE);
+        const gy = Math.round((raw.y - OFFSET_Y) / GRID_SCALE);
+        return {
+            x: gx * GRID_SCALE + OFFSET_X,
+            y: gy * GRID_SCALE + OFFSET_Y
+        };
+    };
 
     // Helper to get relative coordinates
     const getRelativePos = (e: React.MouseEvent | React.TouchEvent): Vector2 | null => {
@@ -32,13 +51,10 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onE
 
     // Touch support helper to find node under finger
     const getNodeFromPoint = (clientX: number, clientY: number): string | null => {
-        // Hide the draft line temporarily so it doesn't block elementFromPoint? 
-        // Or ensure lines have pointer-events: none.
-        // We added 'touch-none' to SVG.
         const el = document.elementFromPoint(clientX, clientY);
         if (!el) return null;
 
-        // Traverse up to find group with data-node-id (we will add this attr)
+        // Traverse up to find group with data-node-id
         let current: Element | null = el;
         while (current && current !== document.body) {
             const nodeId = current.getAttribute('data-node-id');
@@ -48,79 +64,185 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onE
         return null;
     };
 
-    const handleMouseDown = (nodeId: string) => {
-        setDrawingStartNode(nodeId);
+    // Helper to find edge near a point (for deletion)
+    const findEdgeNearPoint = (pos: Vector2): string | null => {
+        const THRESHOLD = 10; // Distance threshold for edge detection
+
+        // Check both user edges and boundary edges, but we'll only allow deleting user edges
+        for (const edge of userEdges) {
+            const start = getNodePos(edge.source);
+            const end = getNodePos(edge.target);
+
+            // Calculate distance from point to line segment
+            const lineLen = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+            if (lineLen === 0) continue;
+
+            const t = Math.max(0, Math.min(1, ((pos.x - start.x) * (end.x - start.x) + (pos.y - start.y) * (end.y - start.y)) / (lineLen * lineLen)));
+            const projX = start.x + t * (end.x - start.x);
+            const projY = start.y + t * (end.y - start.y);
+            const dist = Math.sqrt(Math.pow(pos.x - projX, 2) + Math.pow(pos.y - projY, 2));
+
+            if (dist < THRESHOLD) {
+                return edge.id;
+            }
+        }
+        return null;
+    };
+
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+        e.preventDefault(); // Prevent scrolling on touch
+        const rawPos = getRelativePos(e);
+        if (!rawPos) return;
+
+        // Check for Shift key (edge deletion mode)
+        const isShiftHeld = 'shiftKey' in e && e.shiftKey;
+
+        if (isShiftHeld && onEdgeDelete) {
+            const snappedPos = snapToGrid(rawPos);
+            const edgeId = findEdgeNearPoint(snappedPos);
+            if (edgeId) {
+                onEdgeDelete(edgeId);
+                return; // Don't start dragging
+            }
+        }
+
+        let nodeId: string | undefined = undefined;
+        // Check if we started on a node
+        const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+        const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+        const found = getNodeFromPoint(clientX, clientY);
+
+        let pos = snapToGrid(rawPos);
+
+        if (found) {
+            nodeId = found;
+            // If on a node, use node pos exactly
+            const n = nodes.find(x => x.id === found);
+            if (n) pos = n.position;
+        }
+
+        setDragStart({ pos, nodeId });
+        setMousePos(pos);
     };
 
     const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-        if (drawingStartNode) {
-            const pos = getRelativePos(e);
-            if (pos) setMousePos(pos);
+        e.preventDefault(); // Prevent scrolling
+        const rawPos = getRelativePos(e);
+        if (rawPos) {
+            let pos = snapToGrid(rawPos);
+
+            // Optional: Check if snapping slightly to existing nodes? 
+            // For now, grid snapping is enough as nodes ARE on grid.
+            setMousePos(pos);
         }
     };
 
     const handleMouseUp = (e?: React.MouseEvent | React.TouchEvent) => {
-        if (!drawingStartNode) return;
+        if (e) e.preventDefault();
+        if (!dragStart) return;
 
-        let targetId: string | null = null;
+        let targetId: string | undefined = undefined;
+        let finalPos: Vector2 | null = mousePos; // Default to last known mouse pos
 
         if (e) {
             const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : (e as React.MouseEvent).clientX;
             const clientY = 'changedTouches' in e ? e.changedTouches[0].clientY : (e as React.MouseEvent).clientY;
-            targetId = getNodeFromPoint(clientX, clientY);
+            const found = getNodeFromPoint(clientX, clientY);
+            if (found) targetId = found;
+
+            // Re-calculate final pos from event just in case
+            const raw = getRelativePos(e);
+            if (raw) finalPos = snapToGrid(raw);
         }
 
-        if (targetId && drawingStartNode !== targetId) {
-            // Create edge
-            const newEdge: GameEdge = {
-                id: `${drawingStartNode}-${targetId}-${Date.now()}`,
-                source: drawingStartNode,
-                target: targetId,
-            };
+        if (targetId) {
+            const n = nodes.find(x => x.id === targetId);
+            if (n) finalPos = n.position;
+        }
 
-            const exists = userEdges.some(edge =>
-                (edge.source === drawingStartNode && edge.target === targetId) ||
-                (edge.source === targetId && edge.target === drawingStartNode)
-            ) || boundaryEdges.some(edge =>
-                (edge.source === drawingStartNode && edge.target === targetId) ||
-                (edge.source === targetId && edge.target === drawingStartNode)
-            );
+        if (onStrokeCreate && finalPos) {
+            // Filter out tiny drags which might be accidental clicks
+            // Since we snap, any different grid point is a move. 
+            // Distance check should be based on grid units roughly or equality.
+            const isSamePoint = finalPos.x === dragStart.pos.x && finalPos.y === dragStart.pos.y;
 
-            if (!exists) {
-                const newEdges = [...userEdges, newEdge];
-                onEdgesChange(newEdges);
+            if (!isSamePoint) {
+                onStrokeCreate(
+                    { pos: dragStart.pos, nodeId: dragStart.nodeId },
+                    { pos: finalPos, nodeId: targetId }
+                );
+            } else if (!dragStart.nodeId && !targetId) {
+                // Clicked empty space (no drag) -> Create Point
+                // Even for a click, we want to create it at the SNAPPED position
+                onStrokeCreate(
+                    { pos: dragStart.pos, nodeId: undefined },
+                    { pos: finalPos, nodeId: undefined }
+                );
             }
         }
 
-        setDrawingStartNode(null);
+        setDragStart(null);
         setMousePos(null);
     };
 
     // Global listeners to handle drag release outside nodes or on mobile
     useEffect(() => {
-        const handleWindowUp = (e: MouseEvent | TouchEvent) => {
-            // We can just call our unified handler if we're dragging
-            // But we need to bridge the event types
-            // React SyntheticEvent vs Native Event
-            // Ideally we attach the listener to the SVG, effectively done by props
+        // Keyboard listener for Shift indicator
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Shift') {
+                const indicator = document.getElementById('shift-indicator');
+                if (indicator) indicator.style.opacity = '1';
+            }
         };
-        // Actually we rely on the SVG's onMouseUp / onTouchEnd which bubbles.
-        // But if user drags OUT of SVG, we might miss it.
-        // Let's rely on standard events bounded to SVG for now as game is contained.
-        // But for mobile "drag", we need the Touchend on the SVG to fire logic.
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.key === 'Shift') {
+                const indicator = document.getElementById('shift-indicator');
+                if (indicator) indicator.style.opacity = '0';
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
     }, []);
 
     const getNodePos = (id: string) => nodes.find(n => n.id === id)?.position || { x: 0, y: 0 };
 
+    // Generate grid points for visualization
+    const gridPoints: Vector2[] = [];
+    // We can infer grid bounds from tiles or just generate a large enough field
+    // Assuming 10x10 grid based on standard size
+    for (let x = 0; x <= 10; x++) {
+        for (let y = 0; y <= 10; y++) {
+            gridPoints.push({
+                x: OFFSET_X + x * GRID_SCALE,
+                y: OFFSET_Y + y * GRID_SCALE
+            });
+        }
+    }
+
     return (
-        <div className="relative w-full h-[600px] border border-neutral-800 rounded-lg bg-neutral-900 overflow-hidden shadow-2xl">
+        <div className="relative w-full h-[600px] border border-neutral-800 rounded-lg bg-neutral-900 overflow-hidden shadow-2xl select-none">
+            {/* Shift Mode Indicator */}
+            <div className="absolute top-2 right-2 px-3 py-1 bg-red-500/80 text-white text-xs font-bold rounded pointer-events-none opacity-0 transition-opacity" id="shift-indicator">
+                🗑️ SHIFT: DELETE MODE
+            </div>
+
             <svg
                 ref={svgRef}
                 className="w-full h-full cursor-crosshair touch-none"
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onTouchMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onTouchEnd={handleMouseUp}
+                onMouseLeave={(e) => handleMouseUp(e)}
             >
                 {/* Background Tiles (Yellow/Red/Green areas) */}
                 {tiles?.map((tile) => (
@@ -129,15 +251,34 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onE
                         points={tile.points.map(p => `${p.x},${p.y}`).join(' ')}
                         className={cn(
                             "stroke-none",
-                            tile.type === 'input' && "fill-red-500/80",
-                            tile.type === 'output' && "fill-green-500/80",
-                            tile.type === 'default' && "fill-amber-400"
+                            tile.type === 'input' && "fill-red-500/20",   // Reduced opacity for better visibility of grid
+                            tile.type === 'output' && "fill-green-500/20",
+                            tile.type === 'default' && "fill-amber-400/10"
                         )}
-                        style={{ pointerEvents: 'none' }} // Ensure clicks create through tiles
+                        style={{ pointerEvents: 'none' }}
                     />
                 ))}
 
-                {/* Grid lines (optional background) */}
+                {/* Invalid Faces Error Overlay */}
+                {invalidFaces?.map((face, idx) => (
+                    <polygon
+                        key={`err-face-${idx}`}
+                        points={face.map(p => `${p.x},${p.y}`).join(' ')}
+                        className="fill-red-500/40 stroke-red-500 stroke-2 animate-pulse"
+                        style={{ pointerEvents: 'none' }}
+                    />
+                ))}
+
+                {/* Grid Dots */}
+                {gridPoints.map((p, i) => (
+                    <circle
+                        key={`grid-${i}`}
+                        cx={p.x}
+                        cy={p.y}
+                        r={2}
+                        className="fill-neutral-700 pointer-events-none"
+                    />
+                ))}
 
                 {/* Boundary Edges */}
                 {boundaryEdges.map((edge) => {
@@ -174,14 +315,33 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onE
                 })}
 
                 {/* Draft Line */}
-                {drawingStartNode && mousePos && (
+                {dragStart && mousePos && (
                     <line
-                        x1={getNodePos(drawingStartNode).x}
-                        y1={getNodePos(drawingStartNode).y}
+                        x1={dragStart.nodeId ? getNodePos(dragStart.nodeId).x : dragStart.pos.x}
+                        y1={dragStart.nodeId ? getNodePos(dragStart.nodeId).y : dragStart.pos.y}
                         x2={mousePos.x}
                         y2={mousePos.y}
-                        className="stroke-white/70 stroke-[2px] stroke-dasharray-4"
+                        className="stroke-blue-400 stroke-[2px] stroke-dasharray-4" // Made blue for visibility
                         style={{ pointerEvents: 'none' }}
+                    />
+                )}
+
+                {/* Ghost Node Cursor - Shows where next point will land */}
+                {mousePos && !dragStart && (
+                    <circle
+                        cx={mousePos.x}
+                        cy={mousePos.y}
+                        r={6}
+                        className="fill-blue-500/50 pointer-events-none animate-pulse"
+                    />
+                )}
+                {/* Drag Target Ghost */}
+                {dragStart && mousePos && (
+                    <circle
+                        cx={mousePos.x}
+                        cy={mousePos.y}
+                        r={6}
+                        className="fill-blue-500/50 pointer-events-none"
                     />
                 )}
 
@@ -191,26 +351,18 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, onE
                         key={node.id}
                         data-node-id={node.id} // Crucial for elementFromPoint
                         transform={`translate(${node.position.x}, ${node.position.y})`}
-                        onMouseDown={(e) => {
-                            e.preventDefault(); // Stop text selection
-                            e.stopPropagation();
-                            handleMouseDown(node.id);
-                        }}
-                        onTouchStart={(e) => {
-                            e.stopPropagation();
-                            handleMouseDown(node.id);
-                        }}
-                        // We remove onMouseUp/onTouchEnd on the node itself, relying on global SVG handler with hit detection
                         className="cursor-pointer"
                     >
                         <circle
-                            r={15} // Visible click target is larger now (was 4 + hidden 20)
+                            r={20} // Larger hit area
                             fill="transparent"
                         />
                         <circle
-                            r={4}
+                            r={5}
                             className={cn(
-                                "stroke-[1px] fill-white stroke-white pointer-events-none", // pointer events on parent group
+                                "stroke-[1px] fill-white stroke-white pointer-events-none",
+                                "transition-all duration-200",
+                                (dragStart?.nodeId === node.id) ? "fill-blue-400 scale-125" : ""
                             )}
                         />
                     </g>

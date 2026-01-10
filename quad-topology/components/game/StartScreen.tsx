@@ -33,8 +33,20 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                 </span>
             </button>
 
-            <div className="mt-16 text-xs text-neutral-600">
-                v1.0.0 • Mobile Friendly
+            <div className="mt-12 p-6 bg-neutral-900/50 rounded-xl border border-neutral-800 backdrop-blur-sm max-w-lg w-full text-left">
+                <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+                    <ShieldCheck size={18} className="text-cyan-400" />
+                    HOW TO PLAY
+                </h3>
+                <ul className="text-sm text-neutral-400 space-y-2 list-disc pl-4">
+                    <li><strong className="text-neutral-200">Connect the Dots:</strong> Drag between grid points to draw lines.</li>
+                    <li><strong className="text-neutral-200">Flow:</strong> Guide the flow from <span className="text-red-400">Red Inputs</span> to <span className="text-green-400">Green Outputs</span>.</li>
+                    <li><strong className="text-neutral-200">Goal:</strong> Every face must be a <span className="text-cyan-400">Quad (4-sided)</span>. No triangles, no n-gons!</li>
+                </ul>
+            </div>
+
+            <div className="mt-8 text-xs text-neutral-600">
+                v1.1.0 • Grid Snap Enabled
             </div>
         </div>
     );

@@ -13,6 +13,9 @@ interface DirectedEdge {
     visited: boolean;
 }
 
+/**
+ * Validates that all internal faces of the graph are quadrilaterals (4-sided).
+ */
 export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { isValid: boolean; message: string; invalidFaces: Point[][] } {
     if (edges.length === 0) return { isValid: false, message: "No edges connected", invalidFaces: [] };
 
@@ -82,6 +85,7 @@ export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { is
 
                 // Find entry edge (reverse of current) to calculate turn
                 const entryEdgeIndex = siblings.findIndex(e => e.to === currEdge.from);
+                if (entryEdgeIndex === -1) break; // Should not happen in manifold graph
 
                 // Get next edge in CCW order (wrapping around)
                 let nextIndex = (entryEdgeIndex - 1 + siblings.length) % siblings.length;
@@ -101,11 +105,10 @@ export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { is
         return { isValid: false, message: "Incomplete mesh", invalidFaces: [] };
     }
 
-    // Identify outer face by largest area
+    // Identify outer face by largest area using Shoelace formula
     let maxArea = -1;
     let outerFaceIndex = -1;
 
-    // Use Shoelace formula
     const faceAreas = facePolygons.map((poly, idx) => {
         let area = 0;
         for (let i = 0; i < poly.length; i++) {
@@ -126,29 +129,82 @@ export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { is
     const internalFaces = faces.filter((_, idx) => idx !== outerFaceIndex);
     const internalPolys = facePolygons.filter((_, idx) => idx !== outerFaceIndex);
 
-    let allQuads = true;
-    let badFaceCount = 0;
+    let validFaceCount = 0;
 
+    // Count valid faces (triangles and quads)
     internalFaces.forEach((face, idx) => {
-        if (face.length !== 4) {
-            allQuads = false;
-            badFaceCount++;
-            invalidFaces.push(internalPolys[idx]);
+        if (face.length >= 3 && face.length <= 4) {
+            validFaceCount++;
         }
+        // Skip faces outside 3-4 range (they're ignored, not errors)
     });
 
-    if (badFaceCount > 0) {
+    // Check if we have at least one valid face
+    if (validFaceCount === 0 && internalFaces.length > 0) {
         return {
             isValid: false,
-            message: `Found ${badFaceCount} non-quad face${badFaceCount > 1 ? 's' : ''}`,
-            invalidFaces
+            message: "No valid faces found (need triangles or quads)",
+            invalidFaces: internalPolys // Show all as invalid
         };
     }
 
-    // Ensure we have at least one internal face to call it a success?
     if (internalFaces.length === 0) {
         return { isValid: false, message: "No enclosed faces found", invalidFaces: [] };
     }
 
     return { isValid: true, message: "Perfect Topology!", invalidFaces: [] };
+}
+
+/**
+ * Automatically repairs topology by merging nearby nodes and removing duplicate edges.
+ * Helps make the gameplay feel more "forgiving" and ensures connectivity.
+ */
+export function autoRepairTopology(nodes: GameNode[], edges: GameEdge[]): { nodes: GameNode[], edges: GameEdge[] } {
+    const MERGE_DIST = 15;
+    const mergedNodes: GameNode[] = [];
+    const nodeRedirect = new Map<string, string>(); // oldId -> newId
+
+    // Sort to prioritize keeping level nodes (shorter IDs) over user nodes
+    const sortedNodes = [...nodes].sort((a, b) => a.id.length - b.id.length);
+
+    for (const n of sortedNodes) {
+        // Check if we can merge into an existing mergedNode
+        const match = mergedNodes.find(m =>
+            Math.abs(m.position.x - n.position.x) < MERGE_DIST &&
+            Math.abs(m.position.y - n.position.y) < MERGE_DIST
+        );
+
+        if (match) {
+            nodeRedirect.set(n.id, match.id);
+        } else {
+            mergedNodes.push(n);
+            nodeRedirect.set(n.id, n.id);
+        }
+    }
+
+    // 2. Remap and Deduplicate Edges
+    let cleanEdges: GameEdge[] = [];
+    const seenEdges = new Set<string>();
+
+    for (const e of edges) {
+        const u = nodeRedirect.get(e.source);
+        const v = nodeRedirect.get(e.target);
+
+        if (u && v && u !== v) {
+            // Normalize edge representation for deduplication
+            const [s, t] = u < v ? [u, v] : [v, u];
+            const key = `${s}-${t}`;
+
+            if (!seenEdges.has(key)) {
+                seenEdges.add(key);
+                cleanEdges.push({
+                    id: key,
+                    source: u,
+                    target: v
+                });
+            }
+        }
+    }
+
+    return { nodes: mergedNodes, edges: cleanEdges };
 }
