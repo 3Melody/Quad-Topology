@@ -16,6 +16,7 @@ export type GameEdge = {
     id: string;
     source: string;
     target: string;
+    color?: string; // Optional color for permanent lines
 };
 
 export type GameTile = {
@@ -33,4 +34,5 @@ export type LevelData = {
     tiles: GameTile[]; // Visual background tiles
     gridSize: { width: number; height: number };
     targetFaces: number; // How many quads expected?
+    validTopologies?: { edges: string[] }[];
 };

@@ -51,45 +51,41 @@ const INITIAL_NODES: GameNode[] = [
     { id: 'n1', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
     { id: 'n2', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
     { id: 'n3', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-    // Row 1
+    // Row 2
     { id: 'n4', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
     { id: 'n5', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
     { id: 'n6', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-    // Row 2 (Added Intermediates for explicit steps)
-    { id: 'n13', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-    // n14 REMOVED to allow simple diagonal on the right
-    // { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-
-    // Row 3 (Bottom of middle)
-    { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-    { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-    { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-    // Row 4 (Bottom)
+    // Row 3
+    { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    // Row 4
+    { id: 'n13', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    { id: 'n14', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    { id: 'n15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    // Row 5 (Bottom)
     { id: 'n10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
     { id: 'n11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
     { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
 ];
 
 const BOUNDARY_EDGES: GameEdge[] = [
-    // Vertical Left (Split)
-    { id: 'e1', source: 'n1', target: 'n4' },
-    /* e2a REMOVED */ { id: 'e2b', source: 'n13', target: 'n7' },
-    { id: 'e3', source: 'n7', target: 'n10' },
-    // Vertical Right (Merged n6 to n9 directly)
-    { id: 'e4', source: 'n3', target: 'n6' },
-    { id: 'e5', source: 'n6', target: 'n9' }, // Modified: Single edge
-    { id: 'e6', source: 'n9', target: 'n12' },
-    // Horizontal Top
-    { id: 'e7', source: 'n1', target: 'n2' }, { id: 'e8', source: 'n2', target: 'n3' },
-    // Horizontal Bottom
-    { id: 'e9', source: 'n10', target: 'n11' }, { id: 'e10', source: 'n11', target: 'n12' },
-    // Row 1 Horizontal
-    /* e11 REMOVED */ { id: 'e12', source: 'n5', target: 'n6' },
-    // Row 3 Horizontal
-    { id: 'e13', source: 'n7', target: 'n8' }, { id: 'e14', source: 'n8', target: 'n9' },
-    // Vertical Middle (Top/Bottom inputs/outputs)
-    { id: 'e15', source: 'n2', target: 'n5' },
-    { id: 'e16', source: 'n8', target: 'n11' },
+    // Vertical Left (Single segment)
+    // --- Green Permanent Lines (Top Quads) ---
+    { id: 'ge1', source: 'n1', target: 'n2', color: '#22c55e' },
+    { id: 'ge2', source: 'n2', target: 'n3', color: '#22c55e' },
+    { id: 'ge3', source: 'n4', target: 'n5', color: '#22c55e' },
+    { id: 'ge4', source: 'n5', target: 'n6', color: '#22c55e' },
+    { id: 'ge5', source: 'n1', target: 'n4', color: '#22c55e' },
+    { id: 'ge6', source: 'n2', target: 'n5', color: '#22c55e' },
+    { id: 'ge7', source: 'n3', target: 'n6', color: '#22c55e' },
+
+    // --- Standard Boundary ---
+    { id: 'e3', source: 'n13', target: 'n10', color: '#22c55e' },
+    { id: 'e6', source: 'n15', target: 'n12', color: '#22c55e' },
+    { id: 'e9', source: 'n10', target: 'n11', color: '#22c55e' },
+    { id: 'e10', source: 'n11', target: 'n12', color: '#22c55e' },
+    { id: 'e11', source: 'n13', target: 'n15', color: '#22c55e' },
 ];
 
 interface TutorialStep {
@@ -106,6 +102,7 @@ const getPos = (gx: number, gy: number) => ({
     y: OFFSET_Y + gy * GRID_SCALE
 });
 
+// Interactive Steps - Guided square creation
 // Interactive Steps - Red (1) -> Blue (2) -> Green (3)
 const INTERACTIVE_STEPS: TutorialStep[] = [
     // --- Step 1: Red Square (4 Sides) ---
@@ -113,28 +110,28 @@ const INTERACTIVE_STEPS: TutorialStep[] = [
         start: { x: 2, y: 1 },
         end: { x: 2, y: 2 },
         text: "Step 1: Right Edge",
-        detail: "Now drag down to create the vertical side.",
+        detail: "Start by drawing a vertical edge.",
         targetFace: [getPos(1, 1), getPos(2, 1), getPos(2, 2), getPos(1, 2)]
     },
     {
         start: { x: 2, y: 2 },
         end: { x: 1, y: 2 },
         text: "Step 1: Bottom Edge",
-        detail: "Draw the bottom edge to the left.",
+        detail: "Now, pull across the bottom.",
         targetFace: [getPos(1, 1), getPos(2, 1), getPos(2, 2), getPos(1, 2)]
     },
     {
         start: { x: 1, y: 2 },
         end: { x: 1, y: 1 },
-        text: "Step 1: Close Loop",
-        detail: "Finally, close the loop to complete the Red Square.",
+        text: "Step 1: Left Edge",
+        detail: "Close the square vertically on the left.",
         targetFace: [getPos(1, 1), getPos(2, 1), getPos(2, 2), getPos(1, 2)]
     },
     {
         start: { x: 1, y: 1 },
         end: { x: 2, y: 1 },
         text: "Step 1: Top Edge",
-        detail: "Let's build the first square from scratch. Draw the top edge.",
+        detail: "Finish the first face (the quad) by drawing the top edge.",
         targetFace: [getPos(1, 1), getPos(2, 1), getPos(2, 2), getPos(1, 2)]
     },
 
@@ -177,6 +174,9 @@ const INTERACTIVE_STEPS: TutorialStep[] = [
         targetFace: [getPos(1, 2), getPos(2, 2), getPos(3, 3), getPos(1, 3)]
     }
 ];
+
+
+
 
 export default function Tutorial({ onComplete }: { onComplete: () => void }) {
     const [userNodes, setUserNodes] = useState<GameNode[]>([]);
@@ -331,7 +331,7 @@ export default function Tutorial({ onComplete }: { onComplete: () => void }) {
 
                 {/* Side Panel for Dialog */}
                 <div className="w-64 bg-neutral-900 border-l border-neutral-800 p-6 flex flex-col">
-                    <h2 className="text-xl font-bold mb-6 text-cyan-400">TUTORIAL</h2>
+                    <h2 className="text-xl font-bold mb-6 text-cyan-400">TUTORIAL 1 TO 2</h2>
 
                     {!isDone ? (
                         <div className="flex-1">

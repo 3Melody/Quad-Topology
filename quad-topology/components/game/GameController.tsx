@@ -12,6 +12,26 @@ import SettingsDialog from './SettingsDialog';
 import Tutorial from './Tutorial';
 import { validateQuadTopology, autoRepairTopology } from '../../lib/topology';
 
+const hasEdge = (s: string, t: string, nodes: GameNode[], edges: GameEdge[]) => {
+    const sNode = nodes.find(n => n.id === s);
+    const tNode = nodes.find(n => n.id === t);
+    if (!sNode || !tNode) return false;
+
+    return edges.some(e => {
+        const u = nodes.find(n => n.id === e.source);
+        const v = nodes.find(n => n.id === e.target);
+        if (!u || !v) return false;
+
+        const distUV = Math.sqrt(Math.pow(u.position.x - v.position.x, 2) + Math.pow(u.position.y - v.position.y, 2));
+        const distUS = Math.sqrt(Math.pow(u.position.x - sNode.position.x, 2) + Math.pow(u.position.y - sNode.position.y, 2));
+        const distSV = Math.sqrt(Math.pow(sNode.position.x - v.position.x, 2) + Math.pow(sNode.position.y - v.position.y, 2));
+        const distUT = Math.sqrt(Math.pow(u.position.x - tNode.position.x, 2) + Math.pow(u.position.y - tNode.position.y, 2));
+        const distTV = Math.sqrt(Math.pow(tNode.position.x - v.position.x, 2) + Math.pow(tNode.position.y - v.position.y, 2));
+
+        return Math.abs(distUS + distSV - distUV) < 1 && Math.abs(distUT + distTV - distUV) < 1;
+    });
+};
+
 export default function GameController() {
     const [currentLevelId, setCurrentLevelId] = useState(levels[0].id);
     const [userEdges, setUserEdges] = useState<GameEdge[]>([]);
@@ -138,7 +158,24 @@ export default function GameController() {
         setUserNodes(newUserNodes);
         setUserEdges(newUserEdges);
 
-        const result = validateQuadTopology(repaired.nodes, repaired.edges);
+        let result = validateQuadTopology(repaired.nodes, repaired.edges);
+
+        if (result.isValid && currentLevel.validTopologies && currentLevel.validTopologies.length > 0) {
+            const matchesAny = currentLevel.validTopologies.some(topo => {
+                return topo.edges.every(edgeStr => {
+                    const [s, t] = edgeStr.split('-');
+                    return hasEdge(s, t, allNodes, repaired.edges);
+                });
+            });
+
+            if (!matchesAny) {
+                result = {
+                    isValid: false,
+                    message: "Topologically valid, but doesn't match the specific target pattern for this level.",
+                    invalidFaces: []
+                };
+            }
+        }
 
         if (result.isValid) {
             audioManager.playSFX('win');
@@ -197,10 +234,10 @@ export default function GameController() {
     if (gameState === 'MENU') {
         return <StartScreen onStart={handleStartGame} />;
     }
-
     if (gameState === 'TUTORIAL') {
         return <Tutorial onComplete={handleTutorialComplete} />;
     }
+
 
     return (
         <div className="flex flex-col w-full h-screen max-w-7xl relative">

@@ -291,8 +291,14 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
                             y1={start.y}
                             x2={end.x}
                             y2={end.y}
-                            className="stroke-white/30 stroke-2"
-                            style={{ pointerEvents: 'none' }}
+                            className={cn(
+                                "stroke-2",
+                                !edge.color && "stroke-white/30"
+                            )}
+                            style={{
+                                pointerEvents: 'none',
+                                stroke: edge.color || undefined
+                            }}
                         />
                     );
                 })}
