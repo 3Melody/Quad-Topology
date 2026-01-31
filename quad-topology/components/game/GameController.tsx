@@ -9,13 +9,15 @@ import { RefreshCw, CheckCircle, Volume2, ChevronLeft, Settings } from 'lucide-r
 import StartScreen from './StartScreen';
 import LevelComplete from './LevelComplete';
 import SettingsDialog from './SettingsDialog';
+import Tutorial from './Tutorial';
 import { validateQuadTopology, autoRepairTopology } from '../../lib/topology';
 
 export default function GameController() {
     const [currentLevelId, setCurrentLevelId] = useState(levels[0].id);
     const [userEdges, setUserEdges] = useState<GameEdge[]>([]);
     const [userNodes, setUserNodes] = useState<GameNode[]>([]); // New State
-    const [gameState, setGameState] = useState<'MENU' | 'PLAYING' | 'LEVEL_COMPLETE'>('MENU');
+
+    const [gameState, setGameState] = useState<'MENU' | 'TUTORIAL' | 'PLAYING' | 'LEVEL_COMPLETE'>('MENU');
     const [feedback, setFeedback] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
     const [invalidFaces, setInvalidFaces] = useState<{ x: number, y: number }[][]>([]);
     const [showSettings, setShowSettings] = useState(false);
@@ -34,6 +36,10 @@ export default function GameController() {
     const handleStartGame = () => {
         audioManager.playBGM();
         audioManager.playSFX('click');
+        setGameState('TUTORIAL');
+    };
+
+    const handleTutorialComplete = () => {
         setGameState('PLAYING');
     };
 
@@ -190,6 +196,10 @@ export default function GameController() {
 
     if (gameState === 'MENU') {
         return <StartScreen onStart={handleStartGame} />;
+    }
+
+    if (gameState === 'TUTORIAL') {
+        return <Tutorial onComplete={handleTutorialComplete} />;
     }
 
     return (
