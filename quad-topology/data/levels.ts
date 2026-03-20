@@ -93,6 +93,14 @@ const l6_tiles: GameTile[] = [
     createTile('out', [{ x: 0, y: 3 }, { x: 5, y: 3 }, { x: 5, y: 4 }, { x: 0, y: 4 }], 'output')
 ];
 
+const l_1to3_tiles: GameTile[] = [
+    createTile('in_1', [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }], 'input'),
+    createTile('in_2', [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 1, y: 1 }], 'input'),
+    createTile('in_3', [{ x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 1 }, { x: 2, y: 1 }], 'input'),
+    createTile('area', [{ x: 0, y: 1 }, { x: 3, y: 1 }, { x: 3, y: 3 }, { x: 0, y: 3 }], 'default'),
+    createTile('out', [{ x: 0, y: 3 }, { x: 3, y: 3 }, { x: 3, y: 4 }, { x: 0, y: 4 }], 'output')
+];
+
 const l_tutorial_tiles: GameTile[] = [
     createTile('in', [{ x: 1, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 1 }, { x: 1, y: 1 }], 'input'),
     createTile('area', [{ x: 1, y: 1 }, { x: 3, y: 1 }, { x: 3, y: 3 }, { x: 1, y: 3 }], 'default'),
@@ -157,63 +165,64 @@ export const levels: LevelData[] = [
         ]
     },
     {
-        id: '1-to-1',
-        name: 'LEVEL 2: 1 to 1',
-        description: 'Basic Strip',
-        nodes: [],
-        edges: [],
-        tiles: l1_tiles,
+        id: '1-to-3',
+        name: 'LEVEL 2: 1 to 3',
+        description: 'Transition from 1 to 3 quads.',
+        nodes: [
+            // Top Row (y=0)
+            { id: 'n1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'n2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'n3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'n4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            // Middle-Top Boundary (y=1)
+            { id: 'n5', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'n6', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'n7', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'n8', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            // Middle-Transition (y=2)
+            { id: 'n9', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'n10', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            // Middle-Bottom Boundary (y=3)
+            { id: 'n11', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            // Bottom Row (y=4)
+            { id: 'n13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
+        ],
+        edges: [
+            // Top Inputs boundaries
+            { id: 'e1', source: 'n1', target: 'n2', color: '#22c55e' },
+            { id: 'e2', source: 'n2', target: 'n3', color: '#22c55e' },
+            { id: 'e3', source: 'n3', target: 'n4', color: '#22c55e' },
+            { id: 'e4', source: 'n1', target: 'n5', color: '#22c55e' },
+            { id: 'e5', source: 'n2', target: 'n6', color: '#22c55e' },
+            { id: 'e6', source: 'n3', target: 'n7', color: '#22c55e' },
+            { id: 'e7', source: 'n4', target: 'n8', color: '#22c55e' },
+            { id: 'e8', source: 'n5', target: 'n6', color: '#22c55e' },
+            { id: 'e9', source: 'n6', target: 'n7', color: '#22c55e' },
+            { id: 'e10', source: 'n7', target: 'n8', color: '#22c55e' },
+            // Bottom Output boundaries
+            { id: 'e11', source: 'n11', target: 'n12', color: '#22c55e' },
+            { id: 'e12', source: 'n11', target: 'n13', color: '#22c55e' },
+            { id: 'e13', source: 'n12', target: 'n14', color: '#22c55e' },
+            { id: 'e14', source: 'n13', target: 'n14', color: '#22c55e' },
+            // Area boundary sides
+            { id: 'e15', source: 'n5', target: 'n11', color: '#22c55e' },
+            { id: 'e16', source: 'n8', target: 'n12', color: '#22c55e' }
+        ],
+        tiles: l_1to3_tiles,
         gridSize: { width: 500, height: 600 },
-        targetFaces: 5
+        targetFaces: 8,
+        validTopologies: [
+            {
+                // The 4-quad solution for the area
+                edges: [
+                    'n6-n9', 'n9-n11', 
+                    'n7-n10', 'n10-n12', 
+                    'n9-n10'
+                ]
+            }
+        ]
     },
-    {
-        id: '2-to-1',
-        name: 'LEVEL 3: 2 to 1',
-        description: 'Merge two flows into one.',
-        nodes: [],
-        edges: [],
-        tiles: l2_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 0
-    },
-    {
-        id: '3-to-1',
-        name: 'LEVEL 4: 3 to 1',
-        description: 'Merge three flows into one.',
-        nodes: [],
-        edges: [],
-        tiles: l3_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 0
-    },
-    {
-        id: '3-to-2',
-        name: 'LEVEL 5: 3 to 2',
-        description: 'Reduce 3 columns to 2 columns.',
-        nodes: [],
-        edges: [],
-        tiles: l4_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 0
-    },
-    {
-        id: '4-to-2',
-        name: 'LEVEL 6: 4 to 2',
-        description: 'Reduce 4 columns to 2 columns.',
-        nodes: [],
-        edges: [],
-        tiles: l5_tiles,
-        gridSize: { width: 600, height: 600 },
-        targetFaces: 0
-    },
-    {
-        id: '5-to-3',
-        name: 'LEVEL 7: 5 to 3',
-        description: 'Reduce 5 columns to 3 columns.',
-        nodes: [],
-        edges: [],
-        tiles: l6_tiles,
-        gridSize: { width: 650, height: 600 },
-        targetFaces: 0
-    }
+
 ];
