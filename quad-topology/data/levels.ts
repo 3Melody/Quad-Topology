@@ -110,6 +110,16 @@ const l_1to4_tiles: GameTile[] = [
     createTile('out', [{ x: 0, y: 3 }, { x: 4, y: 3 }, { x: 4, y: 4 }, { x: 0, y: 4 }], 'output')
 ];
 
+const l_1to5_tiles: GameTile[] = [
+    createTile('in_1', [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }], 'input'),
+    createTile('in_2', [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 1, y: 1 }], 'input'),
+    createTile('in_3', [{ x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 1 }, { x: 2, y: 1 }], 'input'),
+    createTile('in_4', [{ x: 3, y: 0 }, { x: 4, y: 0 }, { x: 4, y: 1 }, { x: 3, y: 1 }], 'input'),
+    createTile('in_5', [{ x: 4, y: 0 }, { x: 5, y: 0 }, { x: 5, y: 1 }, { x: 4, y: 1 }], 'input'),
+    createTile('area', [{ x: 0, y: 1 }, { x: 5, y: 1 }, { x: 5, y: 3 }, { x: 0, y: 3 }], 'default'),
+    createTile('out', [{ x: 0, y: 3 }, { x: 5, y: 3 }, { x: 5, y: 4 }, { x: 0, y: 4 }], 'output')
+];
+
 const l_tutorial_tiles: GameTile[] = [
     createTile('in', [{ x: 1, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 1 }, { x: 1, y: 1 }], 'input'),
     createTile('area', [{ x: 1, y: 1 }, { x: 3, y: 1 }, { x: 3, y: 3 }, { x: 1, y: 3 }], 'default'),
@@ -355,4 +365,124 @@ export const levels: LevelData[] = [
             }
         ]
     },
+    {
+        id: '1-to-5',
+        name: 'LEVEL 4: 1 to 5',
+        description: '5-to-1 convergence transition.',
+        nodes: [
+            // y=0 Top Row (5 inputs)
+            { id: 'm1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'm2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'm3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'm4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'm5', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'm6', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            // y=1 Input/Area Boundary
+            { id: 'm7', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'm8', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'm9', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'm10', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'm11', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'm12', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            // y=1.5 Mid-Upper Internal (with boundary nodes)
+            { id: 'm38', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm30', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm31', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm32', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm33', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm39', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+            // y=2 Mid Internal Full Row
+            { id: 'm13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'm14', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'm15', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'm16', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'm17', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'm18', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            // y=2.5 Mid-Lower Internal (with boundary nodes)
+            { id: 'm40', position: { x: OFFSET_X + 0, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm34', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm37', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+            { id: 'm41', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+            // y=3 Area/Output Boundary
+            { id: 'm19', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'm20', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            // y=4 Bottom
+            { id: 'm21', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'm22', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
+        ],
+        edges: [
+            // Top Row
+            { id: 'me1', source: 'm1', target: 'm2', color: '#22c55e' },
+            { id: 'me2', source: 'm2', target: 'm3', color: '#22c55e' },
+            { id: 'me3', source: 'm3', target: 'm4', color: '#22c55e' },
+            { id: 'me4', source: 'm4', target: 'm5', color: '#22c55e' },
+            { id: 'me5', source: 'm5', target: 'm6', color: '#22c55e' },
+            // Input Verticals
+            { id: 'me6', source: 'm1', target: 'm7', color: '#22c55e' },
+            { id: 'me7', source: 'm2', target: 'm8', color: '#22c55e' },
+            { id: 'me8', source: 'm3', target: 'm9', color: '#22c55e' },
+            { id: 'me9', source: 'm4', target: 'm10', color: '#22c55e' },
+            { id: 'me10', source: 'm5', target: 'm11', color: '#22c55e' },
+            { id: 'me11', source: 'm6', target: 'm12', color: '#22c55e' },
+            // Input/Area separator
+            { id: 'me12', source: 'm7', target: 'm8', color: '#22c55e' },
+            { id: 'me13', source: 'm8', target: 'm9', color: '#22c55e' },
+            { id: 'me14', source: 'm9', target: 'm10', color: '#22c55e' },
+            { id: 'me15', source: 'm10', target: 'm11', color: '#22c55e' },
+            { id: 'me16', source: 'm11', target: 'm12', color: '#22c55e' },
+            // Area Side Borders (Left: m7→m38→m13→m40→m19, Right: m12→m39→m18→m41→m20)
+            { id: 'me17a', source: 'm7', target: 'm38', color: '#22c55e' },
+            { id: 'me17b', source: 'm38', target: 'm13', color: '#22c55e' },
+            { id: 'me18a', source: 'm13', target: 'm40', color: '#22c55e' },
+            { id: 'me18b', source: 'm40', target: 'm19', color: '#22c55e' },
+            { id: 'me19a', source: 'm12', target: 'm39', color: '#22c55e' },
+            { id: 'me19b', source: 'm39', target: 'm18', color: '#22c55e' },
+            { id: 'me20a', source: 'm18', target: 'm41', color: '#22c55e' },
+            { id: 'me20b', source: 'm41', target: 'm20', color: '#22c55e' },
+            // Area/Output separator
+            { id: 'me21', source: 'm19', target: 'm20', color: '#22c55e' },
+            // Output verticals
+            { id: 'me22', source: 'm19', target: 'm21', color: '#22c55e' },
+            { id: 'me23', source: 'm20', target: 'm22', color: '#22c55e' },
+            // Output bottom
+            { id: 'me24', source: 'm21', target: 'm22', color: '#22c55e' }
+        ],
+        tiles: l_1to5_tiles,
+        gridSize: { width: 700, height: 600 },
+        targetFaces: 17,
+        validTopologies: [
+            {
+                // Solution A: Symmetric convergence (Pyramid as shown in Step 407)
+                edges: [
+                    // Stage 1: verticals y=1 → 1.5 → 2
+                    'm8-m30', 'm30-m14',
+                    'm9-m31', 'm31-m15',
+                    'm10-m32', 'm32-m16',
+                    'm11-m33', 'm33-m17',
+                    // Horizontals at mid-row y=2
+                    'm13-m14', 'm14-m15', 'm15-m16', 'm16-m17', 'm17-m18',
+                    // Stage 2: pyramid convergence y=2 → 2.5 → 3
+                    'm14-m34', 'm15-m34',
+                    'm16-m37', 'm17-m37',
+                    // Central cross horizontal
+                    'm34-m37',
+                    // Diagonal wings to bottom corners
+                    'm34-m19', 'm37-m20'
+                ]
+            },
+            {
+                // Solution B: X-pattern variant (as shown earlier)
+                edges: [
+                    'm8-m30', 'm30-m14',
+                    'm9-m31', 'm31-m15',
+                    'm10-m32', 'm32-m16',
+                    'm11-m33', 'm33-m17',
+                    'm13-m14', 'm14-m15', 'm15-m16', 'm16-m17', 'm17-m18',
+                    'm14-m34', 'm17-m37',
+                    'm34-m37',
+                    'm34-m20', 'm37-m19'
+                ]
+            }
+        ]
+    }
 ];
