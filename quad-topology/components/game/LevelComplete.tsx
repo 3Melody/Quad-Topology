@@ -23,7 +23,7 @@ export default function LevelComplete({ levelName, faces, onNext, onReplay, hasN
 
                 <h2 className="text-3xl font-bold text-white mb-2">Level Complete!</h2>
                 <p className="text-neutral-400 mb-8">
-                    You solved <span className="text-cyan-400 font-bold">{levelName}</span> with <span className="text-white font-bold">{faces} faces</span>.
+                    You solved <span className="text-cyan-400 font-bold">{levelName}</span>!
                 </p>
 
                 <div className="flex flex-col gap-3">

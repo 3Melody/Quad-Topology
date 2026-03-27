@@ -128,243 +128,243 @@ const l_tutorial_tiles: GameTile[] = [
 
 // Re-export levels with EMPTY nodes/edges
 export const levels: LevelData[] = [
-    {
-        id: 'tutorial-level',
-        name: 'LEVEL 1: TUTORIAL',
-        description: 'Practice what you learned.',
-        nodes: [
-            { id: 'n1', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n2', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n3', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n4', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n5', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n6', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n13', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'n14', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'n15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'n10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'n11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
-        ],
-        edges: [
-            { id: 'ge1', source: 'n1', target: 'n2', color: '#22c55e' },
-            { id: 'ge2', source: 'n2', target: 'n3', color: '#22c55e' },
-            { id: 'ge3', source: 'n4', target: 'n5', color: '#22c55e' },
-            { id: 'ge4', source: 'n5', target: 'n6', color: '#22c55e' },
-            { id: 'ge5', source: 'n1', target: 'n4', color: '#22c55e' },
-            { id: 'ge6', source: 'n2', target: 'n5', color: '#22c55e' },
-            { id: 'ge7', source: 'n3', target: 'n6', color: '#22c55e' },
-            { id: 'e3', source: 'n13', target: 'n10', color: '#22c55e' },
-            { id: 'e6', source: 'n15', target: 'n12', color: '#22c55e' },
-            { id: 'e9', source: 'n10', target: 'n11', color: '#22c55e' },
-            { id: 'e10', source: 'n11', target: 'n12', color: '#22c55e' },
-            { id: 'e11', source: 'n13', target: 'n15', color: '#22c55e' }
-        ],
-        tiles: l_tutorial_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 5,
-        validTopologies: [
-            {
-                // Solution A: Diagonal n8-n15
-                edges: [
-                    'n4-n5', 'n5-n6', 'n4-n7', 'n7-n13', 'n6-n9', 'n9-n15',
-                    'n13-n15', 'n5-n8', 'n7-n8', 'n8-n15'
-                ]
-            },
-            {
-                // Solution B: Diagonal n8-n13
-                edges: [
-                    'n4-n5', 'n5-n6', 'n4-n7', 'n7-n13', 'n6-n9', 'n9-n15',
-                    'n13-n15', 'n5-n8', 'n8-n9', 'n8-n13'
-                ]
-            }
-        ]
-    },
-    {
-        id: '1-to-3',
-        name: 'LEVEL 2: 1 to 3',
-        description: 'Transition from 1 to 3 quads.',
-        nodes: [
-            // Top Row (y=0)
-            { id: 'n1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            // Middle-Top Boundary (y=1)
-            { id: 'n5', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n6', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n7', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n8', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            // Middle-Transition (y=2)
-            { id: 'n9', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n10', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            // Middle-Bottom Boundary (y=3)
-            { id: 'n11', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            // Bottom Row (y=4)
-            { id: 'n13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
-        ],
-        edges: [
-            // Top Inputs boundaries
-            { id: 'e1', source: 'n1', target: 'n2', color: '#22c55e' },
-            { id: 'e2', source: 'n2', target: 'n3', color: '#22c55e' },
-            { id: 'e3', source: 'n3', target: 'n4', color: '#22c55e' },
-            { id: 'e4', source: 'n1', target: 'n5', color: '#22c55e' },
-            { id: 'e5', source: 'n2', target: 'n6', color: '#22c55e' },
-            { id: 'e6', source: 'n3', target: 'n7', color: '#22c55e' },
-            { id: 'e7', source: 'n4', target: 'n8', color: '#22c55e' },
-            { id: 'e8', source: 'n5', target: 'n6', color: '#22c55e' },
-            { id: 'e9', source: 'n6', target: 'n7', color: '#22c55e' },
-            { id: 'e10', source: 'n7', target: 'n8', color: '#22c55e' },
-            // Bottom Output boundaries
-            { id: 'e11', source: 'n11', target: 'n12', color: '#22c55e' },
-            { id: 'e12', source: 'n11', target: 'n13', color: '#22c55e' },
-            { id: 'e13', source: 'n12', target: 'n14', color: '#22c55e' },
-            { id: 'e14', source: 'n13', target: 'n14', color: '#22c55e' },
-            // Area boundary sides
-            { id: 'e15', source: 'n5', target: 'n11', color: '#22c55e' },
-            { id: 'e16', source: 'n8', target: 'n12', color: '#22c55e' }
-        ],
-        tiles: l_1to3_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 8,
-        validTopologies: [
-            {
-                // The 4-quad solution for the area
-                edges: [
-                    'n6-n9', 'n9-n11', 
-                    'n7-n10', 'n10-n12', 
-                    'n9-n10'
-                ]
-            }
-        ]
-    },
-    {
-        id: '1-to-4',
-        name: 'LEVEL 3: 1 to 4',
-        description: 'Single pattern with multi-path solutions.',
-        nodes: [
-            // Top Row (y=0)
-            { id: 'n1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'n5', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            // y=1 Boundary
-            { id: 'n6', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'n10', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            // y=1.5 Mid-Upper Internal
-            { id: 'n24', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
-            { id: 'n20', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
-            { id: 'n21', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
-            // y=2 Internal Full Row
-            { id: 'n11', position: { x: OFFSET_X + 0, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n12', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n13', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'n15', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            // y=2.5 Mid-Lower Internal
-            { id: 'n25', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
-            { id: 'n22', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
-            { id: 'n23', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
-            // y=3 Boundary
-            { id: 'n16', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'n17', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            // y=4 Bottom
-            { id: 'n18', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'n19', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
-        ],
-        edges: [
-            // Boundaries
-            { id: 'e1', source: 'n1', target: 'n2', color: '#22c55e' },
-            { id: 'e2', source: 'n2', target: 'n3', color: '#22c55e' },
-            { id: 'e3', source: 'n3', target: 'n4', color: '#22c55e' },
-            { id: 'e4', source: 'n4', target: 'n5', color: '#22c55e' },
-            { id: 'e5', source: 'n1', target: 'n6', color: '#22c55e' },
-            { id: 'e6', source: 'n5', target: 'n10', color: '#22c55e' },
-            // Area Left Border
-            { id: 'e7a', source: 'n6', target: 'n11', color: '#22c55e' },
-            { id: 'e7b', source: 'n11', target: 'n16', color: '#22c55e' },
-            // Area Right Border
-            { id: 'e8a', source: 'n10', target: 'n15', color: '#22c55e' },
-            { id: 'e8b', source: 'n15', target: 'n17', color: '#22c55e' },
-            { id: 'e9', source: 'n16', target: 'n18', color: '#22c55e' },
-            { id: 'e10', source: 'n17', target: 'n19', color: '#22c55e' },
-            { id: 'e11', source: 'n18', target: 'n19', color: '#22c55e' },
-            { id: 'e12', source: 'n6', target: 'n7', color: '#22c55e' },
-            { id: 'e13', source: 'n7', target: 'n8', color: '#22c55e' },
-            { id: 'e14', source: 'n8', target: 'n9', color: '#22c55e' },
-            { id: 'e15', source: 'n9', target: 'n10', color: '#22c55e' },
-            { id: 'e16', source: 'n16', target: 'n17', color: '#22c55e' }
-        ],
-        tiles: l_1to4_tiles,
-        gridSize: { width: 600, height: 600 },
-        targetFaces: 11,
-        validTopologies: [
-            {
-                // Solution B: Right horizontal at y=2, fan via n12→n25 (already works)
-                edges: [
-                    'n7-n24', 'n8-n20', 'n9-n21',
-                    'n24-n12', 'n20-n13', 'n21-n14',
-                    'n13-n14', 'n14-n15',
-                    'n12-n25',
-                    'n25-n22', 'n22-n23',
-                    'n25-n16', 'n23-n17'
-                ]
-            },
-            {
-                // Solution A1: Left horizontal, diagonal n13→n22
-                edges: [
-                    'n7-n24', 'n8-n20', 'n9-n21',
-                    'n24-n12', 'n20-n13', 'n21-n14',
-                    'n11-n12', 'n12-n13',
-                    'n13-n22',
-                    'n22-n25', 'n22-n23',
-                    'n25-n16', 'n23-n17'
-                ]
-            },
-            {
-                // Solution A2: Left horizontal, diagonal n12→n22 (no n12-n13)
-                edges: [
-                    'n7-n24', 'n8-n20', 'n9-n21',
-                    'n24-n12', 'n20-n13', 'n21-n14',
-                    'n11-n12',
-                    'n12-n22',
-                    'n22-n25', 'n22-n23',
-                    'n25-n16', 'n23-n17'
-                ]
-            },
-            {
-                // Solution A3: Left horizontal, fan via n12→n25 
-                edges: [
-                    'n7-n24', 'n8-n20', 'n9-n21',
-                    'n24-n12', 'n20-n13', 'n21-n14',
-                    'n11-n12', 'n12-n13',
-                    'n12-n25',
-                    'n25-n22', 'n22-n23',
-                    'n25-n16', 'n23-n17'
-                ]
-            },
-            {
-                // Solution A4: Left horizontal only, n12→n25 no n12-n13
-                edges: [
-                    'n7-n24', 'n8-n20', 'n9-n21',
-                    'n24-n12', 'n20-n13', 'n21-n14',
-                    'n11-n12',
-                    'n12-n25',
-                    'n25-n22', 'n22-n23',
-                    'n25-n16', 'n23-n17'
-                ]
-            }
-        ]
-    },
+    // {
+    //     id: 'tutorial-level',
+    //     name: 'LEVEL 1: TUTORIAL',
+    //     description: 'Practice what you learned.',
+    //     nodes: [
+    //         { id: 'n1', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n2', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n3', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n4', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n5', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n6', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n13', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n14', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
+    //     ],
+    //     edges: [
+    //         { id: 'ge1', source: 'n1', target: 'n2', color: '#22c55e' },
+    //         { id: 'ge2', source: 'n2', target: 'n3', color: '#22c55e' },
+    //         { id: 'ge3', source: 'n4', target: 'n5', color: '#22c55e' },
+    //         { id: 'ge4', source: 'n5', target: 'n6', color: '#22c55e' },
+    //         { id: 'ge5', source: 'n1', target: 'n4', color: '#22c55e' },
+    //         { id: 'ge6', source: 'n2', target: 'n5', color: '#22c55e' },
+    //         { id: 'ge7', source: 'n3', target: 'n6', color: '#22c55e' },
+    //         { id: 'e3', source: 'n13', target: 'n10', color: '#22c55e' },
+    //         { id: 'e6', source: 'n15', target: 'n12', color: '#22c55e' },
+    //         { id: 'e9', source: 'n10', target: 'n11', color: '#22c55e' },
+    //         { id: 'e10', source: 'n11', target: 'n12', color: '#22c55e' },
+    //         { id: 'e11', source: 'n13', target: 'n15', color: '#22c55e' }
+    //     ],
+    //     tiles: l_tutorial_tiles,
+    //     gridSize: { width: 500, height: 600 },
+    //     targetFaces: 5,
+    //     validTopologies: [
+    //         {
+    //             // Solution A: Diagonal n8-n15
+    //             edges: [
+    //                 'n4-n5', 'n5-n6', 'n4-n7', 'n7-n13', 'n6-n9', 'n9-n15',
+    //                 'n13-n15', 'n5-n8', 'n7-n8', 'n8-n15'
+    //             ]
+    //         },
+    //         {
+    //             // Solution B: Diagonal n8-n13
+    //             edges: [
+    //                 'n4-n5', 'n5-n6', 'n4-n7', 'n7-n13', 'n6-n9', 'n9-n15',
+    //                 'n13-n15', 'n5-n8', 'n8-n9', 'n8-n13'
+    //             ]
+    //         }
+    //     ]
+    // },
+    // {
+    //     id: '1-to-3',
+    //     name: 'LEVEL 2: 1 to 3',
+    //     description: 'Transition from 1 to 3 quads.',
+    //     nodes: [
+    //         // Top Row (y=0)
+    //         { id: 'n1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         // Middle-Top Boundary (y=1)
+    //         { id: 'n5', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n6', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n7', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n8', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         // Middle-Transition (y=2)
+    //         { id: 'n9', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n10', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         // Middle-Bottom Boundary (y=3)
+    //         { id: 'n11', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         // Bottom Row (y=4)
+    //         { id: 'n13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
+    //     ],
+    //     edges: [
+    //         // Top Inputs boundaries
+    //         { id: 'e1', source: 'n1', target: 'n2', color: '#22c55e' },
+    //         { id: 'e2', source: 'n2', target: 'n3', color: '#22c55e' },
+    //         { id: 'e3', source: 'n3', target: 'n4', color: '#22c55e' },
+    //         { id: 'e4', source: 'n1', target: 'n5', color: '#22c55e' },
+    //         { id: 'e5', source: 'n2', target: 'n6', color: '#22c55e' },
+    //         { id: 'e6', source: 'n3', target: 'n7', color: '#22c55e' },
+    //         { id: 'e7', source: 'n4', target: 'n8', color: '#22c55e' },
+    //         { id: 'e8', source: 'n5', target: 'n6', color: '#22c55e' },
+    //         { id: 'e9', source: 'n6', target: 'n7', color: '#22c55e' },
+    //         { id: 'e10', source: 'n7', target: 'n8', color: '#22c55e' },
+    //         // Bottom Output boundaries
+    //         { id: 'e11', source: 'n11', target: 'n12', color: '#22c55e' },
+    //         { id: 'e12', source: 'n11', target: 'n13', color: '#22c55e' },
+    //         { id: 'e13', source: 'n12', target: 'n14', color: '#22c55e' },
+    //         { id: 'e14', source: 'n13', target: 'n14', color: '#22c55e' },
+    //         // Area boundary sides
+    //         { id: 'e15', source: 'n5', target: 'n11', color: '#22c55e' },
+    //         { id: 'e16', source: 'n8', target: 'n12', color: '#22c55e' }
+    //     ],
+    //     tiles: l_1to3_tiles,
+    //     gridSize: { width: 500, height: 600 },
+    //     targetFaces: 8,
+    //     validTopologies: [
+    //         {
+    //             // The 4-quad solution for the area
+    //             edges: [
+    //                 'n6-n9', 'n9-n11', 
+    //                 'n7-n10', 'n10-n12', 
+    //                 'n9-n10'
+    //             ]
+    //         }
+    //     ]
+    // },
+    // {
+    //     id: '1-to-4',
+    //     name: 'LEVEL 3: 1 to 4',
+    //     description: 'Single pattern with multi-path solutions.',
+    //     nodes: [
+    //         // Top Row (y=0)
+    //         { id: 'n1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'n5', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         // y=1 Boundary
+    //         { id: 'n6', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n7', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n8', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n9', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n10', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         // y=1.5 Mid-Upper Internal
+    //         { id: 'n24', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n20', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n21', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1.5 * GRID_SCALE }, type: 'default' },
+    //         // y=2 Internal Full Row
+    //         { id: 'n11', position: { x: OFFSET_X + 0, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n12', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n13', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n15', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         // y=2.5 Mid-Lower Internal
+    //         { id: 'n25', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n22', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n23', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2.5 * GRID_SCALE }, type: 'default' },
+    //         // y=3 Boundary
+    //         { id: 'n16', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n17', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         // y=4 Bottom
+    //         { id: 'n18', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'n19', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' }
+    //     ],
+    //     edges: [
+    //         // Boundaries
+    //         { id: 'e1', source: 'n1', target: 'n2', color: '#22c55e' },
+    //         { id: 'e2', source: 'n2', target: 'n3', color: '#22c55e' },
+    //         { id: 'e3', source: 'n3', target: 'n4', color: '#22c55e' },
+    //         { id: 'e4', source: 'n4', target: 'n5', color: '#22c55e' },
+    //         { id: 'e5', source: 'n1', target: 'n6', color: '#22c55e' },
+    //         { id: 'e6', source: 'n5', target: 'n10', color: '#22c55e' },
+    //         // Area Left Border
+    //         { id: 'e7a', source: 'n6', target: 'n11', color: '#22c55e' },
+    //         { id: 'e7b', source: 'n11', target: 'n16', color: '#22c55e' },
+    //         // Area Right Border
+    //         { id: 'e8a', source: 'n10', target: 'n15', color: '#22c55e' },
+    //         { id: 'e8b', source: 'n15', target: 'n17', color: '#22c55e' },
+    //         { id: 'e9', source: 'n16', target: 'n18', color: '#22c55e' },
+    //         { id: 'e10', source: 'n17', target: 'n19', color: '#22c55e' },
+    //         { id: 'e11', source: 'n18', target: 'n19', color: '#22c55e' },
+    //         { id: 'e12', source: 'n6', target: 'n7', color: '#22c55e' },
+    //         { id: 'e13', source: 'n7', target: 'n8', color: '#22c55e' },
+    //         { id: 'e14', source: 'n8', target: 'n9', color: '#22c55e' },
+    //         { id: 'e15', source: 'n9', target: 'n10', color: '#22c55e' },
+    //         { id: 'e16', source: 'n16', target: 'n17', color: '#22c55e' }
+    //     ],
+    //     tiles: l_1to4_tiles,
+    //     gridSize: { width: 600, height: 600 },
+    //     targetFaces: 11,
+    //     validTopologies: [
+    //         {
+    //             // Solution B: Right horizontal at y=2, fan via n12→n25 (already works)
+    //             edges: [
+    //                 'n7-n24', 'n8-n20', 'n9-n21',
+    //                 'n24-n12', 'n20-n13', 'n21-n14',
+    //                 'n13-n14', 'n14-n15',
+    //                 'n12-n25',
+    //                 'n25-n22', 'n22-n23',
+    //                 'n25-n16', 'n23-n17'
+    //             ]
+    //         },
+    //         {
+    //             // Solution A1: Left horizontal, diagonal n13→n22
+    //             edges: [
+    //                 'n7-n24', 'n8-n20', 'n9-n21',
+    //                 'n24-n12', 'n20-n13', 'n21-n14',
+    //                 'n11-n12', 'n12-n13',
+    //                 'n13-n22',
+    //                 'n22-n25', 'n22-n23',
+    //                 'n25-n16', 'n23-n17'
+    //             ]
+    //         },
+    //         {
+    //             // Solution A2: Left horizontal, diagonal n12→n22 (no n12-n13)
+    //             edges: [
+    //                 'n7-n24', 'n8-n20', 'n9-n21',
+    //                 'n24-n12', 'n20-n13', 'n21-n14',
+    //                 'n11-n12',
+    //                 'n12-n22',
+    //                 'n22-n25', 'n22-n23',
+    //                 'n25-n16', 'n23-n17'
+    //             ]
+    //         },
+    //         {
+    //             // Solution A3: Left horizontal, fan via n12→n25 
+    //             edges: [
+    //                 'n7-n24', 'n8-n20', 'n9-n21',
+    //                 'n24-n12', 'n20-n13', 'n21-n14',
+    //                 'n11-n12', 'n12-n13',
+    //                 'n12-n25',
+    //                 'n25-n22', 'n22-n23',
+    //                 'n25-n16', 'n23-n17'
+    //             ]
+    //         },
+    //         {
+    //             // Solution A4: Left horizontal only, n12→n25 no n12-n13
+    //             edges: [
+    //                 'n7-n24', 'n8-n20', 'n9-n21',
+    //                 'n24-n12', 'n20-n13', 'n21-n14',
+    //                 'n11-n12',
+    //                 'n12-n25',
+    //                 'n25-n22', 'n22-n23',
+    //                 'n25-n16', 'n23-n17'
+    //             ]
+    //         }
+    //     ]
+    // },
     {
         id: '1-to-5',
         name: 'LEVEL 4: 1 to 5',
@@ -481,6 +481,19 @@ export const levels: LevelData[] = [
                     'm14-m34', 'm17-m37',
                     'm34-m37',
                     'm34-m20', 'm37-m19'
+                ]
+            },
+            {
+                // Solution C: User's convergence pattern (bottom path through m34-m15)
+                edges: [
+                    'm8-m30', 'm30-m14', 'm14-m34',
+                    'm9-m31', 'm31-m15',
+                    'm10-m32', 'm32-m16',
+                    'm11-m33', 'm33-m17', 'm17-m37',
+                    'm34-m37',
+                    'm19-m34', 'm34-m15',
+                    'm15-m16',
+                    'm16-m20'
                 ]
             }
         ]

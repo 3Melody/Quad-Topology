@@ -16,8 +16,8 @@ interface DirectedEdge {
 /**
  * Validates that all internal faces of the graph are quadrilaterals (4-sided).
  */
-export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { isValid: boolean; message: string; invalidFaces: Point[][] } {
-    if (edges.length === 0) return { isValid: false, message: "No edges connected", invalidFaces: [] };
+export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { isValid: boolean; message: string; invalidFaces: Point[][]; faceCount: number } {
+    if (edges.length === 0) return { isValid: false, message: "No edges connected", invalidFaces: [], faceCount: 0 };
 
     // 1. Build Adjacency List with Geometry
     const adj = new Map<string, DirectedEdge[]>();
@@ -102,7 +102,7 @@ export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { is
 
     // 4. Validate Faces
     if (faces.length <= 1) {
-        return { isValid: false, message: "Incomplete mesh", invalidFaces: [] };
+        return { isValid: false, message: "Incomplete mesh", invalidFaces: [], faceCount: 0 };
     }
 
     // Identify outer face by largest area using Shoelace formula
@@ -131,28 +131,26 @@ export function validateQuadTopology(nodes: GameNode[], edges: GameEdge[]): { is
 
     let validFaceCount = 0;
 
-    // Count valid faces (triangles and quads)
     internalFaces.forEach((face, idx) => {
         if (face.length >= 3 && face.length <= 4) {
             validFaceCount++;
         }
-        // Skip faces outside 3-4 range (they're ignored, not errors)
     });
 
-    // Check if we have at least one valid face
     if (validFaceCount === 0 && internalFaces.length > 0) {
         return {
             isValid: false,
             message: "No valid faces found (need triangles or quads)",
-            invalidFaces: internalPolys // Show all as invalid
+            invalidFaces: internalPolys,
+            faceCount: internalFaces.length
         };
     }
 
     if (internalFaces.length === 0) {
-        return { isValid: false, message: "No enclosed faces found", invalidFaces: [] };
+        return { isValid: false, message: "No enclosed faces found", invalidFaces: [], faceCount: 0 };
     }
 
-    return { isValid: true, message: "Perfect Topology!", invalidFaces: [] };
+    return { isValid: true, message: "Perfect Topology!", invalidFaces: [], faceCount: internalFaces.length };
 }
 
 /**
