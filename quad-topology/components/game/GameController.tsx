@@ -12,6 +12,22 @@ import SettingsDialog from './SettingsDialog';
 import Tutorial from './Tutorial';
 import { validateQuadTopology, autoRepairTopology } from '../../lib/topology';
 
+const isConnected = (s: string, t: string, edges: GameEdge[]) => {
+    const visited = new Set<string>();
+    const queue = [s];
+    while (queue.length > 0) {
+        const curr = queue.shift()!;
+        if (curr === t) return true;
+        if (visited.has(curr)) continue;
+        visited.add(curr);
+        for (const e of edges) {
+            if (e.source === curr && !visited.has(e.target)) queue.push(e.target);
+            if (e.target === curr && !visited.has(e.source)) queue.push(e.source);
+        }
+    }
+    return false;
+};
+
 const hasEdge = (s: string, t: string, nodes: GameNode[], edges: GameEdge[]) => {
     const sNode = nodes.find(n => n.id === s);
     const tNode = nodes.find(n => n.id === t);
@@ -149,23 +165,53 @@ export default function GameController() {
         const newUserNodes = repaired.nodes.filter(n => n.id.startsWith('u_'));
 
         // For edges, any edge that isn't strictly one of the original level edges is a user edge
-        const levelEdgeIds = new Set(currentLevel.edges.map(e => e.id));
-        const newUserEdges = repaired.edges.filter(e => !levelEdgeIds.has(e.id));
+        // After autoRepair, edge IDs are normalized to "smaller-larger" format, so match by source-target pair
+        const levelEdgeKeys = new Set(
+            currentLevel.edges.map(e => {
+                const [s, t] = e.source < e.target ? [e.source, e.target] : [e.target, e.source];
+                return `${s}-${t}`;
+            })
+        );
+        const newUserEdges = repaired.edges.filter(e => !levelEdgeKeys.has(e.id));
 
         // Update state to reflect the "Fixed" topology
         setUserNodes(newUserNodes);
         setUserEdges(newUserEdges);
 
-let result = validateQuadTopology(repaired.nodes, repaired.edges);
+// Log nodes required to pass (from validTopologies)
+        if (currentLevel.validTopologies && currentLevel.validTopologies.length > 0) {
+            currentLevel.validTopologies.forEach((topo, i) => {
+                const nodeIds = new Set<string>();
+                topo.edges.forEach(edgeStr => {
+                    const [s, t] = edgeStr.split('-');
+                    nodeIds.add(s);
+                    nodeIds.add(t);
+                });
+                const nodeDetails = [...nodeIds].map(id => {
+                    const n = repaired.nodes.find(n => n.id === id);
+                    return n ? `${id}(${Math.round(n.position.x)},${Math.round(n.position.y)})` : id;
+                });
+                console.log(`[Solution ${i + 1}] required edges:`, topo.edges);
+                console.log(`[Solution ${i + 1}] required nodes:`, nodeDetails);
+            });
+            console.log('[Current] repaired edges:', repaired.edges.filter(e => !new Set(currentLevel.edges.map(e => e.id)).has(e.id)).map(e => `${e.source}-${e.target}`));
+        }
+
+        let result = validateQuadTopology(repaired.nodes, repaired.edges);
 
         if (result.isValid && currentLevel.validTopologies && currentLevel.validTopologies.length > 0) {
             const allNodes = [...currentLevel.nodes, ...userNodes];
-            const matchesAny = currentLevel.validTopologies.some(topo =>
-                topo.edges.every(edgeStr => {
+            const matchesAny = currentLevel.validTopologies.some(topo => {
+                const edgesOk = topo.edges.every(edgeStr => {
                     const [s, t] = edgeStr.split('-');
                     return hasEdge(s, t, allNodes, repaired.edges);
-                })
-            );
+                });
+                const connectionsOk = !topo.connections || topo.connections.every(pair => {
+                    const [s, t] = pair.split('-');
+                    return isConnected(s, t, newUserEdges);
+                });
+                return edgesOk && connectionsOk;
+            });
             if (!matchesAny) {
                 result = {
                     isValid: false,

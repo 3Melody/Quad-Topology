@@ -34,5 +34,5 @@ export type LevelData = {
     tiles: GameTile[]; // Visual background tiles
     gridSize: { width: number; height: number };
     targetFaces: number; // How many quads expected?
-    validTopologies?: { edges: string[] }[];
+    validTopologies?: { edges: string[]; connections?: string[] }[];
 };

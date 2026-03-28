@@ -134,8 +134,8 @@ const l_2to3_tiles: GameTile[] = [
     createTile('l5_in2', [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 2 }, { x: 1, y: 2 }], 'input'),
     createTile('l5_in3', [{ x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 2 }, { x: 2, y: 2 }], 'input'),
     createTile('l5_area', [{ x: 0, y: 2 }, { x: 3, y: 2 }, { x: 3, y: 4 }, { x: 0, y: 4 }], 'default'),
-    createTile('l5_out1', [{ x: 0, y: 4 }, { x: 1.5, y: 4 }, { x: 1.5, y: 6 }, { x: 0, y: 6 }], 'output'),
-    createTile('l5_out2', [{ x: 1.5, y: 4 }, { x: 3, y: 4 }, { x: 3, y: 6 }, { x: 1.5, y: 6 }], 'output'),
+    createTile('l5_out1', [{ x: 0, y: 4 }, { x: 1, y: 4 }, { x: 1, y: 6 }, { x: 0, y: 6 }], 'output'),
+    createTile('l5_out2', [{ x: 1, y: 4 }, { x: 3, y: 4 }, { x: 3, y: 6 }, { x: 1, y: 6 }], 'output'),
 ];
 
 export const levels: LevelData[] = [
@@ -532,13 +532,13 @@ export const levels: LevelData[] = [
             // Output section — 2-channel (x = 0, 1.5G, 3G)
             // Row 4 — top of output
             { id: 'p13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'p14', position: { x: OFFSET_X + 1.5 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'p14', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
             { id: 'p15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
             { id: 'p16', position: { x: OFFSET_X + 0, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'p17', position: { x: OFFSET_X + 1.5 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'p17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
             { id: 'p18', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
             { id: 'p19', position: { x: OFFSET_X + 0, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-            { id: 'p20', position: { x: OFFSET_X + 1.5 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'p20', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
             { id: 'p21', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
         ],
         edges: [
@@ -590,8 +590,13 @@ export const levels: LevelData[] = [
         targetFaces: 13,
         validTopologies: [
             {
-                // V-merge: two inner input nodes (p10, p11) converge to center output node (p14)
-                edges: ['p10-p14', 'p11-p14']
+                // Solution A: V-merge — p10 and p11 both connect directly to center output p14
+                edges: ['p10-p14', 'p11-p14'],
+            },
+            {
+                // Solution B: p10→p14 (direct), p11→p15 (diagonal, may be multi-segment)
+                edges: ['p10-p14'],
+                connections: ['p11-p15'],
             }
         ]
     }
