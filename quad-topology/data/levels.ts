@@ -127,6 +127,20 @@ const l_tutorial_tiles: GameTile[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
+/*                           LEVEL 7: 2 to 5                                  */
+/* -------------------------------------------------------------------------- */
+const l_2to5_tiles: GameTile[] = [
+    createTile('l7_out1', [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 2 }, { x: 0, y: 2 }], 'output'),
+    createTile('l7_out2', [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 2 }, { x: 1, y: 2 }], 'output'),
+    createTile('l7_out3', [{ x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 2 }, { x: 2, y: 2 }], 'output'),
+    createTile('l7_out4', [{ x: 3, y: 0 }, { x: 4, y: 0 }, { x: 4, y: 2 }, { x: 3, y: 2 }], 'output'),
+    createTile('l7_out5', [{ x: 4, y: 0 }, { x: 5, y: 0 }, { x: 5, y: 2 }, { x: 4, y: 2 }], 'output'),
+    createTile('l7_area', [{ x: 0, y: 2 }, { x: 5, y: 2 }, { x: 5, y: 4 }, { x: 0, y: 4 }], 'default'),
+    createTile('l7_in1', [{ x: 0, y: 4 }, { x: 2, y: 4 }, { x: 2, y: 6 }, { x: 0, y: 6 }], 'input'),
+    createTile('l7_in2', [{ x: 2, y: 4 }, { x: 5, y: 4 }, { x: 5, y: 6 }, { x: 2, y: 6 }], 'input'),
+];
+
+/* -------------------------------------------------------------------------- */
 /*                           LEVEL 6: 2 to 4                                  */
 /* -------------------------------------------------------------------------- */
 const l_2to4_tiles: GameTile[] = [
@@ -525,205 +539,313 @@ export const levels: LevelData[] = [
     //     ]
     // },
     /* ---- LEVEL 5 ---- */
+    // {
+    //     id: '3-to-2',
+    //     name: 'LEVEL 5: 3 to 2',
+    //     description: '3-to-2 transition.',
+    //     nodes: [
+    //         // Input section — 3-channel (x = 0, G, 2G, 3G)
+    //         { id: 'p1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'p2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'p3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'p4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'p5', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p6', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p7', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p8', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         // Row 2 — bottom of input / top of transition
+    //         { id: 'p9',  position: { x: OFFSET_X + 0, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         // Guide nodes in transition zone (hints for solution)
+    //         { id: 'p22', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p23', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p24', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         // Output section — 2-channel (x = 0, 1.5G, 3G)
+    //         // Row 4 — top of output
+    //         { id: 'p13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p14', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p16', position: { x: OFFSET_X + 0, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p18', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p19', position: { x: OFFSET_X + 0, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p20', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //         { id: 'p21', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //     ],
+    //     edges: [
+    //         // Input top row
+    //         { id: 'pe1', source: 'p1', target: 'p2', color: '#ef4444' },
+    //         { id: 'pe2', source: 'p2', target: 'p3', color: '#ef4444' },
+    //         { id: 'pe3', source: 'p3', target: 'p4', color: '#ef4444' },
+    //         // Row 0→1 verticals
+    //         { id: 'pe4', source: 'p1', target: 'p5', color: '#ef4444' },
+    //         { id: 'pe5', source: 'p2', target: 'p6', color: '#ef4444' },
+    //         { id: 'pe6', source: 'p3', target: 'p7', color: '#ef4444' },
+    //         { id: 'pe7', source: 'p4', target: 'p8', color: '#ef4444' },
+    //         // Row 1 horizontals
+    //         { id: 'pe8', source: 'p5', target: 'p6', color: '#ef4444' },
+    //         { id: 'pe9', source: 'p6', target: 'p7', color: '#ef4444' },
+    //         { id: 'pe10', source: 'p7', target: 'p8', color: '#ef4444' },
+    //         // Row 1→2 verticals
+    //         { id: 'pe11', source: 'p5', target: 'p9',  color: '#ef4444' },
+    //         { id: 'pe12', source: 'p6', target: 'p10', color: '#ef4444' },
+    //         { id: 'pe13', source: 'p7', target: 'p11', color: '#ef4444' },
+    //         { id: 'pe14', source: 'p8', target: 'p12', color: '#ef4444' },
+    //         // Row 2 horizontals (bottom of input)
+    //         { id: 'pe15', source: 'p9',  target: 'p10', color: '#ef4444' },
+    //         { id: 'pe16', source: 'p10', target: 'p11', color: '#ef4444' },
+    //         { id: 'pe17', source: 'p11', target: 'p12', color: '#ef4444' },
+    //         // Transition sides only
+    //         { id: 'pe18', source: 'p9',  target: 'p13', color: '#6b7280' },
+    //         { id: 'pe19', source: 'p12', target: 'p15', color: '#6b7280' },
+    //         // Output top row
+    //         { id: 'pe20', source: 'p13', target: 'p14', color: '#22c55e' },
+    //         { id: 'pe21', source: 'p14', target: 'p15', color: '#22c55e' },
+    //         // Row 4→5 verticals
+    //         { id: 'pe22', source: 'p13', target: 'p16', color: '#22c55e' },
+    //         { id: 'pe23', source: 'p14', target: 'p17', color: '#22c55e' },
+    //         { id: 'pe24', source: 'p15', target: 'p18', color: '#22c55e' },
+    //         // Row 5 horizontals
+    //         { id: 'pe25', source: 'p16', target: 'p17', color: '#22c55e' },
+    //         { id: 'pe26', source: 'p17', target: 'p18', color: '#22c55e' },
+    //         // Row 5→6 verticals
+    //         { id: 'pe27', source: 'p16', target: 'p19', color: '#22c55e' },
+    //         { id: 'pe28', source: 'p17', target: 'p20', color: '#22c55e' },
+    //         { id: 'pe29', source: 'p18', target: 'p21', color: '#22c55e' },
+    //         // Row 6 bottom
+    //         { id: 'pe30', source: 'p19', target: 'p20', color: '#22c55e' },
+    //         { id: 'pe31', source: 'p20', target: 'p21', color: '#22c55e' },
+    //     ],
+    //     tiles: l_2to3_tiles,
+    //     gridSize: { width: 500, height: 600 },
+    //     targetFaces: 13,
+    //     validTopologies: [
+    //         {
+    //             // Solution A: V-merge — p10 and p11 both converge to center output p14
+    //             edges: [],
+    //             connections: ['p10-p14', 'p11-p14'],
+    //         },
+    //         {
+    //             // Solution B: p10→p14 vertical, p11→p15 diagonal (may pass through p23)
+    //             edges: [],
+    //             connections: ['p10-p14', 'p11-p15'],
+    //         }
+    //     ]
+    // },
+    // /* ---- LEVEL 6 ---- */
+    // {
+    //     id: '2-to-4',
+    //     name: 'LEVEL 6: 2 to 4',
+    //     description: '2-to-4 transition.',
+    //     nodes: [
+    //         // TOP = output section — 4-channel (x = 0,G,2G,3G,4G)
+    //         { id: 'q1',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'q2',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'q3',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'q4',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'q5',  position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+    //         { id: 'q6',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q7',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q8',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q9',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q10', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+    //         // Row 2 — bottom of output / top of transition
+    //         { id: 'q11', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q12', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q13', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q15', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+    //         // Guide nodes — full row at y=3G (x = 0,G,2G,3G,4G)
+    //         { id: 'q16', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q18', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q19', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q20', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+    //         // Row 4 — top of input / bottom of transition
+    //         { id: 'q21', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q22', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q23', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+    //         // BOTTOM = input section — 2-channel (x = 0, 2G, 4G)
+    //         { id: 'q24', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q25', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q26', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q27', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q28', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //         { id: 'q29', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+    //     ],
+    //     edges: [
+    //         // Output top (green)
+    //         { id: 'qe1', source: 'q1', target: 'q2',  color: '#22c55e' },
+    //         { id: 'qe2', source: 'q2', target: 'q3',  color: '#22c55e' },
+    //         { id: 'qe3', source: 'q3', target: 'q4',  color: '#22c55e' },
+    //         { id: 'qe4', source: 'q4', target: 'q5',  color: '#22c55e' },
+    //         // Row 0→1 verticals
+    //         { id: 'qe5',  source: 'q1',  target: 'q6',  color: '#22c55e' },
+    //         { id: 'qe6',  source: 'q2',  target: 'q7',  color: '#22c55e' },
+    //         { id: 'qe7',  source: 'q3',  target: 'q8',  color: '#22c55e' },
+    //         { id: 'qe8',  source: 'q4',  target: 'q9',  color: '#22c55e' },
+    //         { id: 'qe9',  source: 'q5',  target: 'q10', color: '#22c55e' },
+    //         // Row 1 horizontals
+    //         { id: 'qe10', source: 'q6',  target: 'q7',  color: '#22c55e' },
+    //         { id: 'qe11', source: 'q7',  target: 'q8',  color: '#22c55e' },
+    //         { id: 'qe12', source: 'q8',  target: 'q9',  color: '#22c55e' },
+    //         { id: 'qe13', source: 'q9',  target: 'q10', color: '#22c55e' },
+    //         // Row 1→2 verticals
+    //         { id: 'qe14', source: 'q6',  target: 'q11', color: '#22c55e' },
+    //         { id: 'qe15', source: 'q7',  target: 'q12', color: '#22c55e' },
+    //         { id: 'qe16', source: 'q8',  target: 'q13', color: '#22c55e' },
+    //         { id: 'qe17', source: 'q9',  target: 'q14', color: '#22c55e' },
+    //         { id: 'qe18', source: 'q10', target: 'q15', color: '#22c55e' },
+    //         // Row 2 horizontals (bottom of output)
+    //         { id: 'qe19', source: 'q11', target: 'q12', color: '#22c55e' },
+    //         { id: 'qe20', source: 'q12', target: 'q13', color: '#22c55e' },
+    //         { id: 'qe21', source: 'q13', target: 'q14', color: '#22c55e' },
+    //         { id: 'qe22', source: 'q14', target: 'q15', color: '#22c55e' },
+    //         // Transition sides
+    //         { id: 'qe23', source: 'q11', target: 'q21', color: '#6b7280' },
+    //         { id: 'qe24', source: 'q15', target: 'q23', color: '#6b7280' },
+    //         // Row 4 horizontals (top of input)
+    //         { id: 'qe25', source: 'q21', target: 'q22', color: '#ef4444' },
+    //         { id: 'qe26', source: 'q22', target: 'q23', color: '#ef4444' },
+    //         // Row 4→5 verticals
+    //         { id: 'qe27', source: 'q21', target: 'q24', color: '#ef4444' },
+    //         { id: 'qe28', source: 'q22', target: 'q25', color: '#ef4444' },
+    //         { id: 'qe29', source: 'q23', target: 'q26', color: '#ef4444' },
+    //         // Row 5 horizontals
+    //         { id: 'qe30', source: 'q24', target: 'q25', color: '#ef4444' },
+    //         { id: 'qe31', source: 'q25', target: 'q26', color: '#ef4444' },
+    //         // Row 5→6 verticals
+    //         { id: 'qe32', source: 'q24', target: 'q27', color: '#ef4444' },
+    //         { id: 'qe33', source: 'q25', target: 'q28', color: '#ef4444' },
+    //         { id: 'qe34', source: 'q26', target: 'q29', color: '#ef4444' },
+    //         // Row 6 bottom
+    //         { id: 'qe35', source: 'q27', target: 'q28', color: '#ef4444' },
+    //         { id: 'qe36', source: 'q28', target: 'q29', color: '#ef4444' },
+    //     ],
+    //     tiles: l_2to4_tiles,
+    //     gridSize: { width: 700, height: 700 },
+    //     targetFaces: 0,
+    //     validTopologies: [
+    //         {
+    //             // Solution 1: q21→q17→q12, q23→q19→q14, q22-q13 direct
+    //             edges: [],
+    //             connections: ['q21-q17', 'q22-q13', 'q23-q14'],
+    //         },
+    //         {
+    //             // Solution 2: q16-q20 horizontal, q13-q22 direct, q12→q17
+    //             edges: [],
+    //             connections: ['q16-q20', 'q13-q22', 'q12-q17'],
+    //         },
+    //     ]
+    // },
+    /* ---- LEVEL 7 ---- */
     {
-        id: '3-to-2',
-        name: 'LEVEL 5: 3 to 2',
-        description: '3-to-2 transition.',
+        id: '2-to-5',
+        name: 'LEVEL 7: 2 to 5',
+        description: '2-to-5 transition.',
         nodes: [
-            // Input section — 3-channel (x = 0, G, 2G, 3G)
-            { id: 'p1', position: { x: OFFSET_X + 0, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'p2', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'p3', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'p4', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'p5', position: { x: OFFSET_X + 0, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'p6', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'p7', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'p8', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            // Row 2 — bottom of input / top of transition
-            { id: 'p9',  position: { x: OFFSET_X + 0, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'p10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'p11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'p12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            // Guide nodes in transition zone (hints for solution)
-            { id: 'p22', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'p23', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'p24', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            // Output section — 2-channel (x = 0, 1.5G, 3G)
-            // Row 4 — top of output
-            { id: 'p13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'p14', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'p15', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'p16', position: { x: OFFSET_X + 0, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'p17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'p18', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'p19', position: { x: OFFSET_X + 0, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-            { id: 'p20', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-            { id: 'p21', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-        ],
-        edges: [
-            // Input top row
-            { id: 'pe1', source: 'p1', target: 'p2', color: '#ef4444' },
-            { id: 'pe2', source: 'p2', target: 'p3', color: '#ef4444' },
-            { id: 'pe3', source: 'p3', target: 'p4', color: '#ef4444' },
-            // Row 0→1 verticals
-            { id: 'pe4', source: 'p1', target: 'p5', color: '#ef4444' },
-            { id: 'pe5', source: 'p2', target: 'p6', color: '#ef4444' },
-            { id: 'pe6', source: 'p3', target: 'p7', color: '#ef4444' },
-            { id: 'pe7', source: 'p4', target: 'p8', color: '#ef4444' },
-            // Row 1 horizontals
-            { id: 'pe8', source: 'p5', target: 'p6', color: '#ef4444' },
-            { id: 'pe9', source: 'p6', target: 'p7', color: '#ef4444' },
-            { id: 'pe10', source: 'p7', target: 'p8', color: '#ef4444' },
-            // Row 1→2 verticals
-            { id: 'pe11', source: 'p5', target: 'p9',  color: '#ef4444' },
-            { id: 'pe12', source: 'p6', target: 'p10', color: '#ef4444' },
-            { id: 'pe13', source: 'p7', target: 'p11', color: '#ef4444' },
-            { id: 'pe14', source: 'p8', target: 'p12', color: '#ef4444' },
-            // Row 2 horizontals (bottom of input)
-            { id: 'pe15', source: 'p9',  target: 'p10', color: '#ef4444' },
-            { id: 'pe16', source: 'p10', target: 'p11', color: '#ef4444' },
-            { id: 'pe17', source: 'p11', target: 'p12', color: '#ef4444' },
-            // Transition sides only
-            { id: 'pe18', source: 'p9',  target: 'p13', color: '#6b7280' },
-            { id: 'pe19', source: 'p12', target: 'p15', color: '#6b7280' },
-            // Output top row
-            { id: 'pe20', source: 'p13', target: 'p14', color: '#22c55e' },
-            { id: 'pe21', source: 'p14', target: 'p15', color: '#22c55e' },
-            // Row 4→5 verticals
-            { id: 'pe22', source: 'p13', target: 'p16', color: '#22c55e' },
-            { id: 'pe23', source: 'p14', target: 'p17', color: '#22c55e' },
-            { id: 'pe24', source: 'p15', target: 'p18', color: '#22c55e' },
-            // Row 5 horizontals
-            { id: 'pe25', source: 'p16', target: 'p17', color: '#22c55e' },
-            { id: 'pe26', source: 'p17', target: 'p18', color: '#22c55e' },
-            // Row 5→6 verticals
-            { id: 'pe27', source: 'p16', target: 'p19', color: '#22c55e' },
-            { id: 'pe28', source: 'p17', target: 'p20', color: '#22c55e' },
-            { id: 'pe29', source: 'p18', target: 'p21', color: '#22c55e' },
-            // Row 6 bottom
-            { id: 'pe30', source: 'p19', target: 'p20', color: '#22c55e' },
-            { id: 'pe31', source: 'p20', target: 'p21', color: '#22c55e' },
-        ],
-        tiles: l_2to3_tiles,
-        gridSize: { width: 500, height: 600 },
-        targetFaces: 13,
-        validTopologies: [
-            {
-                // Solution A: V-merge — p10 and p11 both converge to center output p14
-                edges: [],
-                connections: ['p10-p14', 'p11-p14'],
-            },
-            {
-                // Solution B: p10→p14 vertical, p11→p15 diagonal (may pass through p23)
-                edges: [],
-                connections: ['p10-p14', 'p11-p15'],
-            }
-        ]
-    },
-    /* ---- LEVEL 6 ---- */
-    {
-        id: '2-to-4',
-        name: 'LEVEL 6: 2 to 4',
-        description: '2-to-4 transition.',
-        nodes: [
-            // TOP = output section — 4-channel (x = 0,G,2G,3G,4G)
-            { id: 'q1',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'q2',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'q3',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'q4',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'q5',  position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
-            { id: 'q6',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'q7',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'q8',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'q9',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
-            { id: 'q10', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            // TOP = output section — 5-channel (x = 0,G,2G,3G,4G,5G)
+            { id: 'r1',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r2',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r3',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r4',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r5',  position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r6',  position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'r7',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'r8',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'r9',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'r10', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'r11', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'r12', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
             // Row 2 — bottom of output / top of transition
-            { id: 'q11', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'q12', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'q13', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'q14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            { id: 'q15', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
-            // Guide nodes — full row at y=3G (x = 0,G,2G,3G,4G)
-            { id: 'q16', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'q17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'q18', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'q19', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'q20', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            // Row 4 — top of input / bottom of transition
-            { id: 'q21', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'q22', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            { id: 'q23', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
-            // BOTTOM = input section — 2-channel (x = 0, 2G, 4G)
-            { id: 'q24', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'q25', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'q26', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
-            { id: 'q27', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-            { id: 'q28', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
-            { id: 'q29', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'r13', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'r14', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'r15', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'r16', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'r17', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'r18', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            // Guide nodes — full row at y=3G
+            { id: 'r19', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'r20', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'r21', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'r22', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'r23', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'r24', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            // Row 4 — top of input / bottom of transition (x = 0, 2G, 5G)
+            { id: 'r25', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'r26', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'r27', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            // BOTTOM = input section — 2-channel
+            { id: 'r28', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'r29', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'r30', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'r31', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'r32', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'r33', position: { x: OFFSET_X + 5 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
         ],
         edges: [
             // Output top (green)
-            { id: 'qe1', source: 'q1', target: 'q2',  color: '#22c55e' },
-            { id: 'qe2', source: 'q2', target: 'q3',  color: '#22c55e' },
-            { id: 'qe3', source: 'q3', target: 'q4',  color: '#22c55e' },
-            { id: 'qe4', source: 'q4', target: 'q5',  color: '#22c55e' },
+            { id: 're1',  source: 'r1',  target: 'r2',  color: '#22c55e' },
+            { id: 're2',  source: 'r2',  target: 'r3',  color: '#22c55e' },
+            { id: 're3',  source: 'r3',  target: 'r4',  color: '#22c55e' },
+            { id: 're4',  source: 'r4',  target: 'r5',  color: '#22c55e' },
+            { id: 're5',  source: 'r5',  target: 'r6',  color: '#22c55e' },
             // Row 0→1 verticals
-            { id: 'qe5',  source: 'q1',  target: 'q6',  color: '#22c55e' },
-            { id: 'qe6',  source: 'q2',  target: 'q7',  color: '#22c55e' },
-            { id: 'qe7',  source: 'q3',  target: 'q8',  color: '#22c55e' },
-            { id: 'qe8',  source: 'q4',  target: 'q9',  color: '#22c55e' },
-            { id: 'qe9',  source: 'q5',  target: 'q10', color: '#22c55e' },
+            { id: 're6',  source: 'r1',  target: 'r7',  color: '#22c55e' },
+            { id: 're7',  source: 'r2',  target: 'r8',  color: '#22c55e' },
+            { id: 're8',  source: 'r3',  target: 'r9',  color: '#22c55e' },
+            { id: 're9',  source: 'r4',  target: 'r10', color: '#22c55e' },
+            { id: 're10', source: 'r5',  target: 'r11', color: '#22c55e' },
+            { id: 're11', source: 'r6',  target: 'r12', color: '#22c55e' },
             // Row 1 horizontals
-            { id: 'qe10', source: 'q6',  target: 'q7',  color: '#22c55e' },
-            { id: 'qe11', source: 'q7',  target: 'q8',  color: '#22c55e' },
-            { id: 'qe12', source: 'q8',  target: 'q9',  color: '#22c55e' },
-            { id: 'qe13', source: 'q9',  target: 'q10', color: '#22c55e' },
+            { id: 're12', source: 'r7',  target: 'r8',  color: '#22c55e' },
+            { id: 're13', source: 'r8',  target: 'r9',  color: '#22c55e' },
+            { id: 're14', source: 'r9',  target: 'r10', color: '#22c55e' },
+            { id: 're15', source: 'r10', target: 'r11', color: '#22c55e' },
+            { id: 're16', source: 'r11', target: 'r12', color: '#22c55e' },
             // Row 1→2 verticals
-            { id: 'qe14', source: 'q6',  target: 'q11', color: '#22c55e' },
-            { id: 'qe15', source: 'q7',  target: 'q12', color: '#22c55e' },
-            { id: 'qe16', source: 'q8',  target: 'q13', color: '#22c55e' },
-            { id: 'qe17', source: 'q9',  target: 'q14', color: '#22c55e' },
-            { id: 'qe18', source: 'q10', target: 'q15', color: '#22c55e' },
+            { id: 're17', source: 'r7',  target: 'r13', color: '#22c55e' },
+            { id: 're18', source: 'r8',  target: 'r14', color: '#22c55e' },
+            { id: 're19', source: 'r9',  target: 'r15', color: '#22c55e' },
+            { id: 're20', source: 'r10', target: 'r16', color: '#22c55e' },
+            { id: 're21', source: 'r11', target: 'r17', color: '#22c55e' },
+            { id: 're22', source: 'r12', target: 'r18', color: '#22c55e' },
             // Row 2 horizontals (bottom of output)
-            { id: 'qe19', source: 'q11', target: 'q12', color: '#22c55e' },
-            { id: 'qe20', source: 'q12', target: 'q13', color: '#22c55e' },
-            { id: 'qe21', source: 'q13', target: 'q14', color: '#22c55e' },
-            { id: 'qe22', source: 'q14', target: 'q15', color: '#22c55e' },
+            { id: 're23', source: 'r13', target: 'r14', color: '#22c55e' },
+            { id: 're24', source: 'r14', target: 'r15', color: '#22c55e' },
+            { id: 're25', source: 'r15', target: 'r16', color: '#22c55e' },
+            { id: 're26', source: 'r16', target: 'r17', color: '#22c55e' },
+            { id: 're27', source: 'r17', target: 'r18', color: '#22c55e' },
             // Transition sides
-            { id: 'qe23', source: 'q11', target: 'q21', color: '#6b7280' },
-            { id: 'qe24', source: 'q15', target: 'q23', color: '#6b7280' },
-            // Row 4 horizontals (top of input)
-            { id: 'qe25', source: 'q21', target: 'q22', color: '#ef4444' },
-            { id: 'qe26', source: 'q22', target: 'q23', color: '#ef4444' },
+            { id: 're28', source: 'r13', target: 'r25', color: '#6b7280' },
+            { id: 're29', source: 'r18', target: 'r27', color: '#6b7280' },
+            // Input top row
+            { id: 're30', source: 'r25', target: 'r26', color: '#ef4444' },
+            { id: 're31', source: 'r26', target: 'r27', color: '#ef4444' },
             // Row 4→5 verticals
-            { id: 'qe27', source: 'q21', target: 'q24', color: '#ef4444' },
-            { id: 'qe28', source: 'q22', target: 'q25', color: '#ef4444' },
-            { id: 'qe29', source: 'q23', target: 'q26', color: '#ef4444' },
+            { id: 're32', source: 'r25', target: 'r28', color: '#ef4444' },
+            { id: 're33', source: 'r26', target: 'r29', color: '#ef4444' },
+            { id: 're34', source: 'r27', target: 'r30', color: '#ef4444' },
             // Row 5 horizontals
-            { id: 'qe30', source: 'q24', target: 'q25', color: '#ef4444' },
-            { id: 'qe31', source: 'q25', target: 'q26', color: '#ef4444' },
+            { id: 're35', source: 'r28', target: 'r29', color: '#ef4444' },
+            { id: 're36', source: 'r29', target: 'r30', color: '#ef4444' },
             // Row 5→6 verticals
-            { id: 'qe32', source: 'q24', target: 'q27', color: '#ef4444' },
-            { id: 'qe33', source: 'q25', target: 'q28', color: '#ef4444' },
-            { id: 'qe34', source: 'q26', target: 'q29', color: '#ef4444' },
+            { id: 're37', source: 'r28', target: 'r31', color: '#ef4444' },
+            { id: 're38', source: 'r29', target: 'r32', color: '#ef4444' },
+            { id: 're39', source: 'r30', target: 'r33', color: '#ef4444' },
             // Row 6 bottom
-            { id: 'qe35', source: 'q27', target: 'q28', color: '#ef4444' },
-            { id: 'qe36', source: 'q28', target: 'q29', color: '#ef4444' },
+            { id: 're40', source: 'r31', target: 'r32', color: '#ef4444' },
+            { id: 're41', source: 'r32', target: 'r33', color: '#ef4444' },
         ],
-        tiles: l_2to4_tiles,
-        gridSize: { width: 700, height: 700 },
+        tiles: l_2to5_tiles,
+        gridSize: { width: 750, height: 750 },
         targetFaces: 0,
         validTopologies: [
-            {
-                // Solution 1: q21→q17→q12, q23→q19→q14, q22-q13 direct
-                edges: [],
-                connections: ['q21-q17', 'q22-q13', 'q23-q14'],
-            },
-            {
-                // Solution 2: q16-q20 horizontal, q13-q22 direct, q12→q17
-                edges: [],
-                connections: ['q16-q20', 'q13-q22', 'q12-q17'],
-            },
+            // To be updated after user sends edge lists
+            { edges: [], connections: ['r26-r15', 'r26-r16'] },
+            { edges: [], connections: ['r26-r14', 'r26-r16'] },
         ]
     }
 ];
