@@ -530,8 +530,9 @@ export const levels: LevelData[] = [
             { id: 'p11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
             { id: 'p12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
             // Guide nodes in transition zone (hints for solution)
-            { id: 'p22', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
-            { id: 'p23', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'p22', position: { x: OFFSET_X + 0, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'p23', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'p24', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
             // Output section — 2-channel (x = 0, 1.5G, 3G)
             // Row 4 — top of output
             { id: 'p13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
