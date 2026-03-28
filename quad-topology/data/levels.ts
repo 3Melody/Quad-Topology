@@ -529,6 +529,9 @@ export const levels: LevelData[] = [
             { id: 'p10', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
             { id: 'p11', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
             { id: 'p12', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            // Guide nodes in transition zone (hints for solution)
+            { id: 'p22', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'p23', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
             // Output section — 2-channel (x = 0, 1.5G, 3G)
             // Row 4 — top of output
             { id: 'p13', position: { x: OFFSET_X + 0, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
@@ -590,13 +593,14 @@ export const levels: LevelData[] = [
         targetFaces: 13,
         validTopologies: [
             {
-                // Solution A: V-merge — p10 and p11 both connect directly to center output p14
-                edges: ['p10-p14', 'p11-p14'],
+                // Solution A: V-merge — p10 and p11 both converge to center output p14
+                edges: [],
+                connections: ['p10-p14', 'p11-p14'],
             },
             {
-                // Solution B: p10→p14 (direct), p11→p15 (diagonal, may be multi-segment)
-                edges: ['p10-p14'],
-                connections: ['p11-p15'],
+                // Solution B: p10→p14 vertical, p11→p15 diagonal (may pass through p23)
+                edges: [],
+                connections: ['p10-p14', 'p11-p15'],
             }
         ]
     }
