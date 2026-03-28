@@ -127,6 +127,21 @@ const l_tutorial_tiles: GameTile[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
+/*                           LEVEL 6: 2 to 4                                  */
+/* -------------------------------------------------------------------------- */
+const l_2to4_tiles: GameTile[] = [
+    // TOP = output (green, 4 channels)
+    createTile('l6_out1', [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 2 }, { x: 0, y: 2 }], 'output'),
+    createTile('l6_out2', [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 2 }, { x: 1, y: 2 }], 'output'),
+    createTile('l6_out3', [{ x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 2 }, { x: 2, y: 2 }], 'output'),
+    createTile('l6_out4', [{ x: 3, y: 0 }, { x: 4, y: 0 }, { x: 4, y: 2 }, { x: 3, y: 2 }], 'output'),
+    createTile('l6_area', [{ x: 0, y: 2 }, { x: 4, y: 2 }, { x: 4, y: 4 }, { x: 0, y: 4 }], 'default'),
+    // BOTTOM = input (red, 2 channels)
+    createTile('l6_in1', [{ x: 0, y: 4 }, { x: 2, y: 4 }, { x: 2, y: 6 }, { x: 0, y: 6 }], 'input'),
+    createTile('l6_in2', [{ x: 2, y: 4 }, { x: 4, y: 4 }, { x: 4, y: 6 }, { x: 2, y: 6 }], 'input'),
+];
+
+/* -------------------------------------------------------------------------- */
 /*                           LEVEL 5: 3 to 2                                  */
 /* -------------------------------------------------------------------------- */
 const l_2to3_tiles: GameTile[] = [
@@ -603,6 +618,112 @@ export const levels: LevelData[] = [
                 edges: [],
                 connections: ['p10-p14', 'p11-p15'],
             }
+        ]
+    },
+    /* ---- LEVEL 6 ---- */
+    {
+        id: '2-to-4',
+        name: 'LEVEL 6: 2 to 4',
+        description: '2-to-4 transition.',
+        nodes: [
+            // TOP = output section — 4-channel (x = 0,G,2G,3G,4G)
+            { id: 'q1',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'q2',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'q3',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'q4',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'q5',  position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 0 }, type: 'default' },
+            { id: 'q6',  position: { x: OFFSET_X + 0,            y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'q7',  position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'q8',  position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'q9',  position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            { id: 'q10', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 1 * GRID_SCALE }, type: 'default' },
+            // Row 2 — bottom of output / top of transition
+            { id: 'q11', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'q12', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'q13', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'q14', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            { id: 'q15', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 2 * GRID_SCALE }, type: 'default' },
+            // Guide nodes — full row at y=3G (x = 0,G,2G,3G,4G)
+            { id: 'q16', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'q17', position: { x: OFFSET_X + 1 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'q18', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'q19', position: { x: OFFSET_X + 3 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            { id: 'q20', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 3 * GRID_SCALE }, type: 'default' },
+            // Row 4 — top of input / bottom of transition
+            { id: 'q21', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'q22', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            { id: 'q23', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 4 * GRID_SCALE }, type: 'default' },
+            // BOTTOM = input section — 2-channel (x = 0, 2G, 4G)
+            { id: 'q24', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'q25', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'q26', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 5 * GRID_SCALE }, type: 'default' },
+            { id: 'q27', position: { x: OFFSET_X + 0,            y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'q28', position: { x: OFFSET_X + 2 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+            { id: 'q29', position: { x: OFFSET_X + 4 * GRID_SCALE, y: OFFSET_Y + 6 * GRID_SCALE }, type: 'default' },
+        ],
+        edges: [
+            // Output top (green)
+            { id: 'qe1', source: 'q1', target: 'q2',  color: '#22c55e' },
+            { id: 'qe2', source: 'q2', target: 'q3',  color: '#22c55e' },
+            { id: 'qe3', source: 'q3', target: 'q4',  color: '#22c55e' },
+            { id: 'qe4', source: 'q4', target: 'q5',  color: '#22c55e' },
+            // Row 0→1 verticals
+            { id: 'qe5',  source: 'q1',  target: 'q6',  color: '#22c55e' },
+            { id: 'qe6',  source: 'q2',  target: 'q7',  color: '#22c55e' },
+            { id: 'qe7',  source: 'q3',  target: 'q8',  color: '#22c55e' },
+            { id: 'qe8',  source: 'q4',  target: 'q9',  color: '#22c55e' },
+            { id: 'qe9',  source: 'q5',  target: 'q10', color: '#22c55e' },
+            // Row 1 horizontals
+            { id: 'qe10', source: 'q6',  target: 'q7',  color: '#22c55e' },
+            { id: 'qe11', source: 'q7',  target: 'q8',  color: '#22c55e' },
+            { id: 'qe12', source: 'q8',  target: 'q9',  color: '#22c55e' },
+            { id: 'qe13', source: 'q9',  target: 'q10', color: '#22c55e' },
+            // Row 1→2 verticals
+            { id: 'qe14', source: 'q6',  target: 'q11', color: '#22c55e' },
+            { id: 'qe15', source: 'q7',  target: 'q12', color: '#22c55e' },
+            { id: 'qe16', source: 'q8',  target: 'q13', color: '#22c55e' },
+            { id: 'qe17', source: 'q9',  target: 'q14', color: '#22c55e' },
+            { id: 'qe18', source: 'q10', target: 'q15', color: '#22c55e' },
+            // Row 2 horizontals (bottom of output)
+            { id: 'qe19', source: 'q11', target: 'q12', color: '#22c55e' },
+            { id: 'qe20', source: 'q12', target: 'q13', color: '#22c55e' },
+            { id: 'qe21', source: 'q13', target: 'q14', color: '#22c55e' },
+            { id: 'qe22', source: 'q14', target: 'q15', color: '#22c55e' },
+            // Transition sides
+            { id: 'qe23', source: 'q11', target: 'q21', color: '#6b7280' },
+            { id: 'qe24', source: 'q15', target: 'q23', color: '#6b7280' },
+            // Row 4 horizontals (top of input)
+            { id: 'qe25', source: 'q21', target: 'q22', color: '#ef4444' },
+            { id: 'qe26', source: 'q22', target: 'q23', color: '#ef4444' },
+            // Row 4→5 verticals
+            { id: 'qe27', source: 'q21', target: 'q24', color: '#ef4444' },
+            { id: 'qe28', source: 'q22', target: 'q25', color: '#ef4444' },
+            { id: 'qe29', source: 'q23', target: 'q26', color: '#ef4444' },
+            // Row 5 horizontals
+            { id: 'qe30', source: 'q24', target: 'q25', color: '#ef4444' },
+            { id: 'qe31', source: 'q25', target: 'q26', color: '#ef4444' },
+            // Row 5→6 verticals
+            { id: 'qe32', source: 'q24', target: 'q27', color: '#ef4444' },
+            { id: 'qe33', source: 'q25', target: 'q28', color: '#ef4444' },
+            { id: 'qe34', source: 'q26', target: 'q29', color: '#ef4444' },
+            // Row 6 bottom
+            { id: 'qe35', source: 'q27', target: 'q28', color: '#ef4444' },
+            { id: 'qe36', source: 'q28', target: 'q29', color: '#ef4444' },
+        ],
+        tiles: l_2to4_tiles,
+        gridSize: { width: 700, height: 700 },
+        targetFaces: 0,
+        validTopologies: [
+            {
+                // Solution 1: q21→q17→q12, q23→q19→q14, q22-q13 direct
+                edges: [],
+                connections: ['q21-q17', 'q22-q13', 'q23-q14'],
+            },
+            {
+                // Solution 2: q16-q20 horizontal, q13-q22 direct, q12→q17
+                edges: [],
+                connections: ['q16-q20', 'q13-q22', 'q12-q17'],
+            },
         ]
     }
 ];
