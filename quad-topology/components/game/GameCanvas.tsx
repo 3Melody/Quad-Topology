@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { GameNode, GameEdge, GameTile, Vector2 } from '../../lib/types';
 import { cn } from '../../lib/utils';
 import { GRID_SCALE, OFFSET_X, OFFSET_Y } from '../../data/levels';
+
+// ViewBox dimensions for consistent coordinate system
+export const VIEWBOX_WIDTH = 700;
+export const VIEWBOX_HEIGHT = 500;
 
 interface GameCanvasProps {
     nodes: GameNode[];
@@ -37,17 +41,34 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
         };
     };
 
-    // Helper to get relative coordinates
-    const getRelativePos = (e: React.MouseEvent | React.TouchEvent): Vector2 | null => {
+    // Helper to get relative coordinates - converts screen coords to SVG viewBox coords
+    const getRelativePos = useCallback((e: React.MouseEvent | React.TouchEvent): Vector2 | null => {
         if (!svgRef.current) return null;
         const rect = svgRef.current.getBoundingClientRect();
-        const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-        const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
+        let clientX: number, clientY: number;
+        if ('touches' in e && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else if ('changedTouches' in e && e.changedTouches.length > 0) {
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        } else if ('clientX' in e) {
+            clientX = (e as React.MouseEvent).clientX;
+            clientY = (e as React.MouseEvent).clientY;
+        } else {
+            return null;
+        }
+
+        // Convert screen coordinates to SVG viewBox coordinates
+        const scaleX = VIEWBOX_WIDTH / rect.width;
+        const scaleY = VIEWBOX_HEIGHT / rect.height;
+
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top,
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY,
         };
-    };
+    }, []);
 
     // Touch support helper to find node under finger
     const getNodeFromPoint = (clientX: number, clientY: number): string | null => {
@@ -89,6 +110,18 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
         return null;
     };
 
+    // Helper to get client coordinates from mouse or touch event
+    const getClientCoords = (e: React.MouseEvent | React.TouchEvent): { clientX: number, clientY: number } | null => {
+        if ('touches' in e && e.touches.length > 0) {
+            return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+        } else if ('changedTouches' in e && e.changedTouches.length > 0) {
+            return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+        } else if ('clientX' in e) {
+            return { clientX: (e as React.MouseEvent).clientX, clientY: (e as React.MouseEvent).clientY };
+        }
+        return null;
+    };
+
     const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
         e.preventDefault(); // Prevent scrolling on touch
         const rawPos = getRelativePos(e);
@@ -108,16 +141,19 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
 
         let nodeId: string | undefined = undefined;
         // Check if we started on a node
-        const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-        const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-        const found = getNodeFromPoint(clientX, clientY);
+        const coords = getClientCoords(e);
+        if (coords) {
+            const found = getNodeFromPoint(coords.clientX, coords.clientY);
+            if (found) {
+                nodeId = found;
+            }
+        }
 
         let pos = snapToGrid(rawPos);
 
-        if (found) {
-            nodeId = found;
+        if (nodeId) {
             // If on a node, use node pos exactly
-            const n = nodes.find(x => x.id === found);
+            const n = nodes.find(x => x.id === nodeId);
             if (n) pos = n.position;
         }
 
@@ -145,10 +181,11 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
         let finalPos: Vector2 | null = mousePos; // Default to last known mouse pos
 
         if (e) {
-            const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : (e as React.MouseEvent).clientX;
-            const clientY = 'changedTouches' in e ? e.changedTouches[0].clientY : (e as React.MouseEvent).clientY;
-            const found = getNodeFromPoint(clientX, clientY);
-            if (found) targetId = found;
+            const coords = getClientCoords(e);
+            if (coords) {
+                const found = getNodeFromPoint(coords.clientX, coords.clientY);
+                if (found) targetId = found;
+            }
 
             // Re-calculate final pos from event just in case
             const raw = getRelativePos(e);
@@ -191,14 +228,14 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Shift') {
                 const indicator = document.getElementById('shift-indicator');
-                if (indicator) indicator.style.opacity = '1';
+                if (indicator) indicator.classList.remove('hidden');
             }
         };
 
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.key === 'Shift') {
                 const indicator = document.getElementById('shift-indicator');
-                if (indicator) indicator.style.opacity = '0';
+                if (indicator) indicator.classList.add('hidden');
             }
         };
 
@@ -227,14 +264,16 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
     }
 
     return (
-        <div className="relative w-full h-[600px] border border-neutral-800 rounded-lg bg-neutral-900 overflow-hidden shadow-2xl select-none">
-            {/* Shift Mode Indicator */}
-            <div className="absolute top-2 right-2 px-3 py-1 bg-red-500/80 text-white text-xs font-bold rounded pointer-events-none opacity-0 transition-opacity" id="shift-indicator">
-                🗑️ SHIFT: DELETE MODE
+        <div className="relative w-full aspect-7/5 max-h-[80vh] border border-neutral-800 rounded-lg bg-neutral-900 overflow-hidden shadow-2xl select-none">
+            {/* Shift Mode Indicator - hidden by default, shown via JS when shift pressed */}
+            <div className="absolute top-2 right-2 px-3 py-1 bg-red-500/80 text-white text-xs font-bold rounded pointer-events-none transition-opacity z-10 hidden" id="shift-indicator">
+                DELETE MODE
             </div>
 
             <svg
                 ref={svgRef}
+                viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+                preserveAspectRatio="xMidYMid meet"
                 className="w-full h-full cursor-crosshair touch-none"
                 onMouseDown={handleMouseDown}
                 onTouchStart={handleMouseDown}

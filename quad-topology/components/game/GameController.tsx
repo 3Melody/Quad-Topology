@@ -285,7 +285,7 @@ export default function GameController() {
 
 
     return (
-        <div className="flex flex-col w-full h-screen max-w-7xl relative">
+        <div className="flex flex-col w-full h-screen max-w-7xl relative px-2 sm:px-4">
             <SettingsDialog
                 isOpen={showSettings}
                 onClose={() => setShowSettings(false)}
@@ -303,28 +303,25 @@ export default function GameController() {
             )}
 
             {/* Header HUD */}
-            <header className="flex items-center w-full justify-between p-4 bg-neutral-900/90 border-b border-neutral-800 backdrop-blur-md z-10 rounded-t-xl mt-4 mx-4 border">
-                <div>
-                    <h2 className="text-xl font-bold text-white tracking-widest uppercase">{currentLevel.name}</h2>
-                    <p className="text-xs text-neutral-400">Target: All faces must be Triangles or Quads (3-4 sided)</p>
+            <header className="flex items-center w-full justify-between p-2 sm:p-4 bg-neutral-900/90 border-b border-neutral-800 backdrop-blur-md z-10 rounded-t-xl mt-2 sm:mt-4 border">
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-base sm:text-xl font-bold text-white tracking-widest uppercase truncate">{currentLevel.name}</h2>
+                    <p className="text-[10px] sm:text-xs text-neutral-400 hidden sm:block">Target: All faces must be Triangles or Quads (3-4 sided)</p>
                 </div>
-                <div className="flex items-center gap-4">
-                    <button onClick={() => setShowSettings(true)} className="text-neutral-500 hover:text-white transition-colors">
-                        <Settings size={20} />
+                <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+                    <button onClick={() => setShowSettings(true)} className="text-neutral-500 hover:text-white transition-colors p-1">
+                        <Settings size={18} className="sm:w-5 sm:h-5" />
                     </button>
-                    {/* <button onClick={() => audioManager.toggleMute()} className="text-neutral-500 hover:text-white transition-colors">
-                        <Volume2 size={20} />
-                    </button> */}
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
                         <button
                             onClick={handlePrevLevel}
                             disabled={currentLevelIndex === 0}
                             className="p-1 text-neutral-400 hover:text-white disabled:opacity-30 disabled:hover:text-neutral-400 transition-colors"
                         >
-                            <ChevronLeft size={24} />
+                            <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
                         </button>
-                        <div className="px-3 py-1 bg-neutral-800 rounded text-xs text-neutral-400 border border-neutral-700 whitespace-nowrap">
+                        <div className="px-2 sm:px-3 py-1 bg-neutral-800 rounded text-xs text-neutral-400 border border-neutral-700 whitespace-nowrap">
                             {currentLevelIndex + 1} / {levels.length}
                         </div>
                     </div>
@@ -332,7 +329,7 @@ export default function GameController() {
             </header>
 
             {/* Main Game Area */}
-            <div className="flex-1 relative w-full overflow-hidden bg-neutral-900 mx-4 border-x border-neutral-800">
+            <div className="flex-1 relative w-full overflow-hidden bg-neutral-900 border-x border-neutral-800 flex items-center justify-center p-2 sm:p-4">
                 <GameCanvas
                     nodes={[...currentLevel.nodes, ...userNodes]}
                     boundaryEdges={currentLevel.edges}
@@ -352,34 +349,34 @@ export default function GameController() {
             </div>
 
             {/* Controls HUD */}
-            <div className="p-4 bg-neutral-900/90 border-t w-full border-neutral-800 backdrop-blur-md z-10 mb-4 mx-4 rounded-b-xl border flex flex-col gap-2">
-                <div className="flex gap-4">
+            <div className="p-2 sm:p-4 bg-neutral-900/90 border-t w-full border-neutral-800 backdrop-blur-md z-10 mb-2 sm:mb-4 rounded-b-xl border flex flex-col gap-2">
+                <div className="flex gap-2 sm:gap-4">
                     <button
                         onClick={handleReset}
-                        className="flex-1 flex items-center justify-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-white py-3 px-4 rounded-xl transition-all font-bold active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-1 sm:gap-2 bg-neutral-800 hover:bg-neutral-700 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-xl transition-all font-bold active:scale-95 text-sm sm:text-base"
                     >
-                        <RefreshCw size={20} />
+                        <RefreshCw size={18} className="sm:w-5 sm:h-5" />
                         RESET
                     </button>
                     <button
                         onClick={handleCheck}
-                        className="flex-[2] flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 text-black py-3 px-4 rounded-xl transition-all font-black uppercase tracking-wider active:scale-95 shadow-[0_0_15px_rgba(34,197,94,0.3)]"
+                        className="flex-2 flex items-center justify-center gap-1 sm:gap-2 bg-green-500 hover:bg-green-400 text-black py-2 sm:py-3 px-3 sm:px-4 rounded-xl transition-all font-black uppercase tracking-wider active:scale-95 shadow-[0_0_15px_rgba(34,197,94,0.3)] text-sm sm:text-base"
                     >
-                        <CheckCircle size={24} />
+                        <CheckCircle size={20} className="sm:w-6 sm:h-6" />
                         CHECK
                     </button>
                 </div>
 
                 {/* Feedback Message */}
                 {feedback.type && gameState === 'PLAYING' && (
-                    <div className="text-center text-sm font-medium text-red-400 animate-in fade-in slide-in-from-bottom-2">
+                    <div className="text-center text-xs sm:text-sm font-medium text-red-400 animate-in fade-in slide-in-from-bottom-2">
                         {feedback.message}
                     </div>
                 )}
             </div>
 
             {/* Legend - small */}
-            <div className="absolute top-20 left-6 text-[10px] text-neutral-500 pointer-events-none opacity-50 flex flex-col gap-1">
+            <div className="absolute top-16 sm:top-20 left-4 sm:left-6 text-[10px] text-neutral-500 pointer-events-none opacity-50 flex flex-col gap-1">
                 <div className="flex items-center gap-1"><div className="w-2 h-2 bg-red-500 rounded-full" /> Input</div>
                 <div className="flex items-center gap-1"><div className="w-2 h-2 bg-green-500 rounded-full" /> Output</div>
             </div>

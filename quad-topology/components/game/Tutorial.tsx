@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from 'react';
-import GameCanvas from './GameCanvas';
+import GameCanvas, { VIEWBOX_WIDTH, VIEWBOX_HEIGHT } from './GameCanvas';
 import { GameEdge, GameNode, GameTile, Vector2 } from '../../lib/types';
 import { MousePointer2, ArrowRight, CheckCircle2, Info } from 'lucide-react';
 
@@ -286,93 +286,98 @@ export default function Tutorial({ onComplete }: { onComplete: () => void }) {
 
     const currentStep = INTERACTIVE_STEPS[stepIndex];
 
+    // Calculate cursor position as percentage for responsive overlay
+    const cursorPercentX = (cursorPos.x / VIEWBOX_WIDTH) * 100;
+    const cursorPercentY = (cursorPos.y / VIEWBOX_HEIGHT) * 100;
+
     return (
-        <div className="relative w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-white cursor-default">
+        <div className="relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-center bg-neutral-900 text-white cursor-default p-2 sm:p-4 gap-4">
 
-            <div className="relative border border-neutral-700 rounded-xl overflow-hidden shadow-2xl bg-neutral-950 flex">
+            {/* Visual Area */}
+            <div className="relative w-full max-w-2xl border border-neutral-700 rounded-xl overflow-hidden shadow-2xl bg-neutral-950">
+                <GameCanvas
+                    nodes={[...INITIAL_NODES, ...userNodes]}
+                    boundaryEdges={BOUNDARY_EDGES}
+                    userEdges={userEdges}
+                    tiles={TUTORIAL_TILES}
+                    invalidFaces={[]}
+                    onEdgesChange={() => { }}
+                    onStrokeCreate={handleStrokeCreate}
+                />
 
-                {/* Visual Area */}
-                <div style={{ width: 500, height: 500 }} className="relative">
-                    <GameCanvas
-                        nodes={[...INITIAL_NODES, ...userNodes]}
-                        boundaryEdges={BOUNDARY_EDGES}
-                        userEdges={userEdges}
-                        tiles={TUTORIAL_TILES}
-                        invalidFaces={[]}
-                        onEdgesChange={() => { }}
-                        onStrokeCreate={handleStrokeCreate}
-                    />
+                {/* Highlight Face Overlay - uses same viewBox as GameCanvas */}
+                {!isDone && currentStep?.targetFace && (
+                    <svg
+                        className="absolute inset-0 pointer-events-none w-full h-full"
+                        viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+                        preserveAspectRatio="xMidYMid meet"
+                    >
+                        <polygon
+                            points={currentStep.targetFace.map(p => `${p.x},${p.y}`).join(' ')}
+                            className="fill-red-500/20 stroke-red-500 stroke-2 animate-pulse"
+                        />
+                    </svg>
+                )}
 
-                    {/* Highlight Face Overlay */}
-                    {!isDone && currentStep?.targetFace && (
-                        <svg className="absolute inset-0 pointer-events-none w-full h-full">
-                            <polygon
-                                points={currentStep.targetFace.map(p => `${p.x},${p.y}`).join(' ')}
-                                className="fill-red-500/20 stroke-red-500 stroke-2 animate-pulse"
-                            />
-                        </svg>
-                    )}
+                {/* Ghost Cursor - positioned using percentage */}
+                {!isDone && (
+                    <div
+                        className="absolute pointer-events-none z-50 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                        style={{
+                            left: `${cursorPercentX}%`,
+                            top: `${cursorPercentY}%`,
+                            transform: 'translate(-25%, -25%)',
+                            opacity: 0.8
+                        }}
+                    >
+                        <MousePointer2 size={28} className="fill-cyan-500 text-black rotate-[-15deg] sm:w-8 sm:h-8" />
+                    </div>
+                )}
+            </div>
 
-                    {/* Ghost Cursor */}
-                    {!isDone && (
-                        <div
-                            className="absolute pointer-events-none transition-transform duration-75 z-50 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
-                            style={{
-                                left: 0,
-                                top: 0,
-                                transform: `translate(${cursorPos.x}px, ${cursorPos.y}px)`,
-                                opacity: 0.8
-                            }}
-                        >
-                            <MousePointer2 size={32} className="fill-cyan-500 text-black rotate-[-15deg]" />
+            {/* Side Panel for Dialog */}
+            <div className="w-full max-w-md lg:w-72 bg-neutral-900 border border-neutral-800 rounded-xl p-4 sm:p-6 flex flex-col">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-cyan-400">TUTORIAL 1 TO 2</h2>
+
+                {!isDone ? (
+                    <div className="flex-1">
+                        <div className="mb-4">
+                            <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">STEP {stepIndex + 1}</span>
+                            <h3 className="text-lg sm:text-xl font-bold text-white mt-1">{currentStep?.text}</h3>
                         </div>
-                    )}
-                </div>
 
-                {/* Side Panel for Dialog */}
-                <div className="w-64 bg-neutral-900 border-l border-neutral-800 p-6 flex flex-col">
-                    <h2 className="text-xl font-bold mb-6 text-cyan-400">TUTORIAL 1 TO 2</h2>
-
-                    {!isDone ? (
-                        <div className="flex-1">
-                            <div className="mb-4">
-                                <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">STEP {stepIndex + 1}</span>
-                                <h3 className="text-xl font-bold text-white mt-1">{currentStep?.text}</h3>
-                            </div>
-
-                            <div className="bg-neutral-800/50 p-4 rounded-lg border border-neutral-700 text-sm text-neutral-300 leading-relaxed">
-                                <Info size={16} className="inline mr-2 text-cyan-400 mb-1" />
-                                {currentStep?.detail}
-                            </div>
+                        <div className="bg-neutral-800/50 p-3 sm:p-4 rounded-lg border border-neutral-700 text-sm text-neutral-300 leading-relaxed">
+                            <Info size={16} className="inline mr-2 text-cyan-400 mb-1" />
+                            {currentStep?.detail}
                         </div>
-                    ) : (
-                        <div className="flex-1 animate-in slide-in-from-bottom-4 duration-500">
-                            <div className="bg-cyan-500/10 border border-cyan-500/50 p-5 rounded-xl text-center shadow-[0_0_20px_rgba(6,182,212,0.1)]">
-                                <CheckCircle2 size={48} className="text-cyan-400 mb-3 mx-auto" />
-                                <h3 className="text-lg font-black mb-2 text-white">ALL STEPS DONE!</h3>
-                                <p className="text-neutral-400 text-xs mb-5 leading-relaxed">
-                                    Review your structure on the left. Ready to start the real levels?
-                                </p>
-                                <button
-                                    onClick={onComplete}
-                                    className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-black rounded-lg transition-all active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] uppercase tracking-widest text-xs"
-                                >
-                                    Start Game
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="mt-auto pt-6 border-t border-neutral-800">
-                        {!isDone && (
+                    </div>
+                ) : (
+                    <div className="flex-1 animate-in slide-in-from-bottom-4 duration-500">
+                        <div className="bg-cyan-500/10 border border-cyan-500/50 p-4 sm:p-5 rounded-xl text-center shadow-[0_0_20px_rgba(6,182,212,0.1)]">
+                            <CheckCircle2 size={40} className="text-cyan-400 mb-3 mx-auto sm:w-12 sm:h-12" />
+                            <h3 className="text-base sm:text-lg font-black mb-2 text-white">ALL STEPS DONE!</h3>
+                            <p className="text-neutral-400 text-xs mb-4 sm:mb-5 leading-relaxed">
+                                Review your structure. Ready to start the real levels?
+                            </p>
                             <button
                                 onClick={onComplete}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-neutral-400 hover:text-white transition-colors text-sm"
+                                className="w-full py-2 sm:py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-black rounded-lg transition-all active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.3)] uppercase tracking-widest text-xs"
                             >
-                                Skip Tutorial
+                                Start Game
                             </button>
-                        )}
+                        </div>
                     </div>
+                )}
+
+                <div className="mt-4 sm:mt-auto pt-4 sm:pt-6 border-t border-neutral-800">
+                    {!isDone && (
+                        <button
+                            onClick={onComplete}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 sm:py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-neutral-400 hover:text-white transition-colors text-sm"
+                        >
+                            Skip Tutorial
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
