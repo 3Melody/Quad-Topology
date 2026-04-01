@@ -303,6 +303,7 @@ export default function Tutorial({ onComplete }: { onComplete: () => void }) {
                     invalidFaces={[]}
                     onEdgesChange={() => { }}
                     onStrokeCreate={handleStrokeCreate}
+                    enableZoom={false}
                 />
 
                 {/* Highlight Face Overlay - uses same viewBox as GameCanvas */}

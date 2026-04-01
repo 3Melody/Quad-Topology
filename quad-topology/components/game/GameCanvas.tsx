@@ -4,10 +4,16 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { GameNode, GameEdge, GameTile, Vector2 } from '../../lib/types';
 import { cn } from '../../lib/utils';
 import { GRID_SCALE, OFFSET_X, OFFSET_Y } from '../../data/levels';
+import { ZoomIn, ZoomOut, Maximize2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Eye, EyeOff } from 'lucide-react';
 
 // ViewBox dimensions for consistent coordinate system
 export const VIEWBOX_WIDTH = 700;
 export const VIEWBOX_HEIGHT = 500;
+
+// Zoom settings
+const ZOOM_MIN = 1;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = 0.5;
 
 interface GameCanvasProps {
     nodes: GameNode[];
@@ -19,13 +25,28 @@ interface GameCanvasProps {
     onEdgeDelete?: (edgeId: string) => void; // NEW: Delete edge callback
     // New unified handler for advanced creation
     onStrokeCreate?: (start: { pos: Vector2, nodeId?: string }, end: { pos: Vector2, nodeId?: string }) => void;
+    // Zoom control options
+    enableZoom?: boolean;
+    onZoomChange?: (zoom: number, panOffset: Vector2) => void;
 }
 
-export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, invalidFaces, onEdgesChange, onEdgeDelete, onStrokeCreate }: GameCanvasProps) {
+export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, invalidFaces, onEdgesChange, onEdgeDelete, onStrokeCreate, enableZoom = true, onZoomChange }: GameCanvasProps) {
     const [dragStart, setDragStart] = useState<{ pos: Vector2, nodeId?: string } | null>(null);
     const [mousePos, setMousePos] = useState<Vector2 | null>(null);
 
+    // Zoom and pan state
+    const [zoom, setZoom] = useState(1);
+    const [panOffset, setPanOffset] = useState<Vector2>({ x: 0, y: 0 });
+    const [isPanning, setIsPanning] = useState(false);
+    const [panStart, setPanStart] = useState<Vector2 | null>(null);
+    const [showControls, setShowControls] = useState(true);
+
     const svgRef = useRef<SVGSVGElement>(null);
+
+    // Notify parent of zoom changes
+    useEffect(() => {
+        onZoomChange?.(zoom, panOffset);
+    }, [zoom, panOffset, onZoomChange]);
 
     // Import constants locally or strictly match what is in data/levels if imports fail in this environment (but I will use imports)
     // To ensure this works without import errors if the previous step failed or relative paths are tricky, I'll hardcode or use props. 
@@ -40,6 +61,15 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
             y: gy * GRID_SCALE + OFFSET_Y
         };
     };
+
+    // Calculate current viewBox based on zoom and pan
+    const getViewBox = useCallback(() => {
+        const width = VIEWBOX_WIDTH / zoom;
+        const height = VIEWBOX_HEIGHT / zoom;
+        const x = panOffset.x;
+        const y = panOffset.y;
+        return { x, y, width, height };
+    }, [zoom, panOffset]);
 
     // Helper to get relative coordinates - converts screen coords to SVG viewBox coords
     const getRelativePos = useCallback((e: React.MouseEvent | React.TouchEvent): Vector2 | null => {
@@ -60,15 +90,16 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
             return null;
         }
 
-        // Convert screen coordinates to SVG viewBox coordinates
-        const scaleX = VIEWBOX_WIDTH / rect.width;
-        const scaleY = VIEWBOX_HEIGHT / rect.height;
+        // Convert screen coordinates to SVG viewBox coordinates (accounting for zoom/pan)
+        const vb = getViewBox();
+        const scaleX = vb.width / rect.width;
+        const scaleY = vb.height / rect.height;
 
         return {
-            x: (clientX - rect.left) * scaleX,
-            y: (clientY - rect.top) * scaleY,
+            x: (clientX - rect.left) * scaleX + vb.x,
+            y: (clientY - rect.top) * scaleY + vb.y,
         };
-    }, []);
+    }, [getViewBox]);
 
     // Touch support helper to find node under finger
     const getNodeFromPoint = (clientX: number, clientY: number): string | null => {
@@ -250,6 +281,121 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
 
     const getNodePos = (id: string) => nodes.find(n => n.id === id)?.position || { x: 0, y: 0 };
 
+    // Zoom controls
+    const handleZoomIn = () => {
+        setZoom(prev => {
+            const newZoom = Math.min(ZOOM_MAX, prev + ZOOM_STEP);
+            // Center the zoom on the middle of the content
+            if (newZoom > prev) {
+                const centerX = VIEWBOX_WIDTH / 2;
+                const centerY = VIEWBOX_HEIGHT / 2;
+                const newWidth = VIEWBOX_WIDTH / newZoom;
+                const newHeight = VIEWBOX_HEIGHT / newZoom;
+                setPanOffset({
+                    x: centerX - newWidth / 2,
+                    y: centerY - newHeight / 2
+                });
+            }
+            return newZoom;
+        });
+    };
+
+    const handleZoomOut = () => {
+        setZoom(prev => {
+            const newZoom = Math.max(ZOOM_MIN, prev - ZOOM_STEP);
+            if (newZoom < prev) {
+                const centerX = VIEWBOX_WIDTH / 2;
+                const centerY = VIEWBOX_HEIGHT / 2;
+                const newWidth = VIEWBOX_WIDTH / newZoom;
+                const newHeight = VIEWBOX_HEIGHT / newZoom;
+                setPanOffset({
+                    x: Math.max(0, Math.min(VIEWBOX_WIDTH - newWidth, centerX - newWidth / 2)),
+                    y: Math.max(0, Math.min(VIEWBOX_HEIGHT - newHeight, centerY - newHeight / 2))
+                });
+            }
+            return newZoom;
+        });
+    };
+
+    const handleZoomReset = () => {
+        setZoom(1);
+        setPanOffset({ x: 0, y: 0 });
+    };
+
+    // Directional pan with buttons
+    const PAN_AMOUNT = 50;
+    const handlePanDirection = (direction: 'up' | 'down' | 'left' | 'right') => {
+        if (zoom <= 1) return;
+
+        const vb = getViewBox();
+        const maxX = VIEWBOX_WIDTH - vb.width;
+        const maxY = VIEWBOX_HEIGHT - vb.height;
+
+        setPanOffset(prev => {
+            switch (direction) {
+                case 'up':
+                    return { ...prev, y: Math.max(0, prev.y - PAN_AMOUNT) };
+                case 'down':
+                    return { ...prev, y: Math.min(maxY, prev.y + PAN_AMOUNT) };
+                case 'left':
+                    return { ...prev, x: Math.max(0, prev.x - PAN_AMOUNT) };
+                case 'right':
+                    return { ...prev, x: Math.min(maxX, prev.x + PAN_AMOUNT) };
+                default:
+                    return prev;
+            }
+        });
+    };
+
+    // Pan handling for zoomed view
+    const handlePanStart = (e: React.MouseEvent | React.TouchEvent) => {
+        if (zoom <= 1) return;
+
+        // Use two-finger touch for panning
+        if ('touches' in e && e.touches.length === 2) {
+            e.preventDefault();
+            setIsPanning(true);
+            const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            setPanStart({ x: midX, y: midY });
+        }
+    };
+
+    const handlePanMove = (e: React.MouseEvent | React.TouchEvent) => {
+        if (!isPanning || !panStart || zoom <= 1) return;
+
+        if ('touches' in e && e.touches.length === 2) {
+            e.preventDefault();
+            const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+            const rect = svgRef.current?.getBoundingClientRect();
+            if (!rect) return;
+
+            const vb = getViewBox();
+            const scaleX = vb.width / rect.width;
+            const scaleY = vb.height / rect.height;
+
+            const dx = (panStart.x - midX) * scaleX;
+            const dy = (panStart.y - midY) * scaleY;
+
+            const maxX = VIEWBOX_WIDTH - vb.width;
+            const maxY = VIEWBOX_HEIGHT - vb.height;
+
+            setPanOffset(prev => ({
+                x: Math.max(0, Math.min(maxX, prev.x + dx)),
+                y: Math.max(0, Math.min(maxY, prev.y + dy))
+            }));
+
+            setPanStart({ x: midX, y: midY });
+        }
+    };
+
+    const handlePanEnd = () => {
+        setIsPanning(false);
+        setPanStart(null);
+    };
+
     // Generate grid points for visualization
     const gridPoints: Vector2[] = [];
     // We can infer grid bounds from tiles or just generate a large enough field
@@ -263,8 +409,91 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
         }
     }
 
+    const vb = getViewBox();
+
     return (
         <div className="relative w-full aspect-7/5 max-h-[80vh] border border-neutral-800 rounded-lg bg-neutral-900 overflow-hidden shadow-2xl select-none">
+            {/* Zoom Controls Toggle Button */}
+            {enableZoom && (
+                <button
+                    onClick={() => setShowControls(prev => !prev)}
+                    className="absolute top-2 left-2 p-2 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-700 z-20"
+                    title={showControls ? "Hide Controls" : "Show Controls"}
+                >
+                    {showControls ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+            )}
+
+            {/* Zoom Controls */}
+            {enableZoom && showControls && (
+                <div className="absolute bottom-2 right-2 flex flex-col gap-1 z-20">
+                    <button
+                        onClick={handleZoomIn}
+                        disabled={zoom >= ZOOM_MAX}
+                        className="p-2 bg-neutral-800/90 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800/90 text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-700"
+                        title="Zoom In"
+                    >
+                        <ZoomIn size={18} />
+                    </button>
+                    <button
+                        onClick={handleZoomOut}
+                        disabled={zoom <= ZOOM_MIN}
+                        className="p-2 bg-neutral-800/90 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800/90 text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-700"
+                        title="Zoom Out"
+                    >
+                        <ZoomOut size={18} />
+                    </button>
+                    {zoom > 1 && (
+                        <button
+                            onClick={handleZoomReset}
+                            className="p-2 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-700"
+                            title="Reset Zoom"
+                        >
+                            <Maximize2 size={18} />
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {/* Directional Pad - shown when zoomed */}
+            {enableZoom && showControls && zoom > 1 && (
+                <div className="absolute bottom-2 left-2 z-20">
+                    <div className="grid grid-cols-3 gap-0.5">
+                        <div />
+                        <button
+                            onClick={() => handlePanDirection('up')}
+                            className="p-1.5 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded transition-colors backdrop-blur-sm border border-neutral-700"
+                        >
+                            <ChevronUp size={16} />
+                        </button>
+                        <div />
+                        <button
+                            onClick={() => handlePanDirection('left')}
+                            className="p-1.5 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded transition-colors backdrop-blur-sm border border-neutral-700"
+                        >
+                            <ChevronLeft size={16} />
+                        </button>
+                        <div className="p-1.5 bg-neutral-800/50 rounded border border-neutral-700 flex items-center justify-center">
+                            <span className="text-[10px] text-neutral-400">{Math.round(zoom * 100)}%</span>
+                        </div>
+                        <button
+                            onClick={() => handlePanDirection('right')}
+                            className="p-1.5 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded transition-colors backdrop-blur-sm border border-neutral-700"
+                        >
+                            <ChevronRight size={16} />
+                        </button>
+                        <div />
+                        <button
+                            onClick={() => handlePanDirection('down')}
+                            className="p-1.5 bg-neutral-800/90 hover:bg-neutral-700 text-white rounded transition-colors backdrop-blur-sm border border-neutral-700"
+                        >
+                            <ChevronDown size={16} />
+                        </button>
+                        <div />
+                    </div>
+                </div>
+            )}
+
             {/* Shift Mode Indicator - hidden by default, shown via JS when shift pressed */}
             <div className="absolute top-2 right-2 px-3 py-1 bg-red-500/80 text-white text-xs font-bold rounded pointer-events-none transition-opacity z-10 hidden" id="shift-indicator">
                 DELETE MODE
@@ -272,15 +501,33 @@ export default function GameCanvas({ nodes, boundaryEdges, userEdges, tiles, inv
 
             <svg
                 ref={svgRef}
-                viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+                viewBox={`${vb.x} ${vb.y} ${vb.width} ${vb.height}`}
                 preserveAspectRatio="xMidYMid meet"
                 className="w-full h-full cursor-crosshair touch-none"
                 onMouseDown={handleMouseDown}
-                onTouchStart={handleMouseDown}
+                onTouchStart={(e) => {
+                    if (e.touches.length === 2) {
+                        handlePanStart(e);
+                    } else {
+                        handleMouseDown(e);
+                    }
+                }}
                 onMouseMove={handleMouseMove}
-                onTouchMove={handleMouseMove}
+                onTouchMove={(e) => {
+                    if (e.touches.length === 2) {
+                        handlePanMove(e);
+                    } else if (!isPanning) {
+                        handleMouseMove(e);
+                    }
+                }}
                 onMouseUp={handleMouseUp}
-                onTouchEnd={handleMouseUp}
+                onTouchEnd={(e) => {
+                    if (isPanning) {
+                        handlePanEnd();
+                    } else {
+                        handleMouseUp(e);
+                    }
+                }}
                 onMouseLeave={(e) => handleMouseUp(e)}
             >
                 {/* Background Tiles (Yellow/Red/Green areas) */}
